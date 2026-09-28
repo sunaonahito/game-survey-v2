@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ゲーム体験についてのご質問</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      background: #0F1F3D;
+      background-image: linear-gradient(135deg, #0A1628 0%, #1A2744 30%, #1E3A5F 60%, #162D50 100%);
+      background-attachment: fixed;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: #E8ECF2;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useCallback, useEffect } = React;
+
+    // ============================================================
+    // Google スプレッドシート連携
+    // ============================================================
+    const GAS_URL = "https://script.google.com/macros/s/AKfycby9itef5eqI4fIBDXnzI_urRzQ2b8GKrctslvcCK8I9T5pXj96yQmm1suQGqdwnB7l9/exec";
+
+    // --- Scales ---
+    const L7 = { min: 1, max: 7, labels: ["全くそう思わない", "", "", "", "", "", "非常にそう思う"] };
+    const L7E = { min: 1, max: 7, labels: ["まったく感じなかった", "", "", "", "", "", "非常に強く感じた"] };
+    const L7A = { min: 1, max: 7, labels: ["全く当てはまらない", "", "", "", "", "", "非常によく当てはまる"] };
+    const C11 = { min: 0, max: 10, labels: ["まったくできる自信がない", "", "", "", "", "", "", "", "", "", "確実にできる自信がある"] };
+    const S7 = { min: -3, max: 3, labels: ["非常に否定的な変化", "", "", "変化なし", "", "", "非常に肯定的な変化"] };
+    const L6 = { min: 1, max: 6, labels: ["全く当てはまらない", "", "", "", "", "非常に当てはまる"] };
+
+    // --- Colors ---
+    const P = { bg: "linear-gradient(135deg,#0A1628 0%,#1A2744 30%,#1E3A5F 60%,#162D50 100%)", bgSolid: "#0F1F3D", card: "rgba(255,255,255,0.07)", cardSolid: "#162844", pri: "#5B8AF0", priL: "#7BA4F7", acc: "#E8A44A", accL: "rgba(232,164,74,0.2)", txt: "#E8ECF2", mut: "#8899B3", bdr: "rgba(255,255,255,0.12)", sel: "#5B8AF0", selBg: "rgba(91,138,240,0.15)", err: "#F07070", secBg: "rgba(255,255,255,0.04)" };
+
+    // --- Questions ---
+    const PRE = {
+      demo: [
+        { id: "q1", type: "code", label: "匿名コードを作成してください。" },
+        { id: "q2", type: "number", label: "あなたの年齢をお書きください。", ph: "歳", suf: "歳" },
+        { id: "q3", type: "radio", label: "あなたの性別を教えてください。", opts: ["男性", "女性", "どちらでもない", "回答しない"] },
+        { id: "q4", type: "checkbox", label: "あなたの民族的背景を教えてください。（当てはまるものすべて選択）", opts: ["日本人", "東アジア系（中国、韓国など）", "東南アジア系（ベトナム、タイ、フィリピンなど）", "南アジア系（インド、ネパールなど）", "その他", "回答しない"], hasOther: true, otherIdx: 4 },
+        { id: "q5", type: "checkbox", label: "あなたの現在の職業や立場を教えてください。（当てはまるものすべて選択）", opts: ["会社員・公務員・団体職員（正社員・正規職員）", "会社員・団体職員（派遣・契約・嘱託社員）", "自営業・フリーランス・経営者", "パート・アルバイト", "専業主婦・主夫", "学生", "無職・休職中・リタイア", "その他", "回答しない"], hasOther: true, otherIdx: 7 },
+        { id: "q6", type: "radio", label: "あなたの現在の婚姻・交際状況を教えてください。", opts: ["既婚", "未婚（現在、パートナーがいる）", "未婚（現在、パートナーがいない）", "その他", "回答しない"] },
+        { id: "q7", type: "radio", label: "子どもの有無を教えてください。", opts: ["子どもがいる", "子どもはいない", "回答しない"] },
+        { id: "q8", type: "radio", label: "あなたの現在の健康状態を教えてください。（最も当てはまるものを選択）", opts: ["よい", "まあよい", "ふつう", "あまりよくない", "よくない", "回答しない"] },
+        { id: "q9", type: "radio", label: "あなたの喪失経験を教えてください。過去3年以内に、あなたにとって非常に重大な喪失体験（大切な人との死別や離別、重要な役割の喪失、健康の喪失など）がありましたか。", opts: ["はい", "いいえ", "わからない", "回答しない"] },
+      ],
+      swls: {
+        title: "§1.", inst: "以下の各文について、あなたの考えに最も近い数字をお選びください。正解や不正解はありません。感じたままに正直にお答えください。",
+        scaleNote: ["1：全く当てはまらない", "2：あまり当てはまらない", "3：どちらかといえば当てはまらない", "4：どちらともいえない", "5：どちらかといえば当てはまる", "6：やや当てはまる", "7：非常によく当てはまる"],
+        scale: L7A, items: [
+          { id: "q10", t: "私は自分の人生に満足している。" }, { id: "q11", t: "私の人生は、とても素晴らしい状態だ。" }, { id: "q12", t: "大体において、私の人生は理想に近い。" }, { id: "q13", t: "私はこれまで、自分の人生に求める大切なものを得てきた。" }, { id: "q14", t: "もう一度人生をやり直せるとしても、ほとんど何も変えないだろう。" },
+        ]
+      },
+      cses: {
+        title: "§2.", inst: "物事がうまくいかないときや、問題を抱えているとき、以下のことをどのくらい自信を持ってできますか。0（まったくできない）から10（確実にできる）の中から当てはまる数字を選んでください。", scale: C11, items: [
+          { id: "q18", t: "つらい問題を小さな部分に分けて考える。" }, { id: "q19", t: "変更できることと変更できないことを整理する。" }, { id: "q20", t: "不快な考えを頭から追い払う。" }, { id: "q21", t: "不快な考えから気をそらす。" }, { id: "q22", t: "不快な考えで動揺しないようにする。" }, { id: "q23", t: "問題に直面したとき、行動計画を立てて実行する。" }, { id: "q24", t: "悲しい気持ちにならないようにする。" }, { id: "q25", t: "ストレスを感じたとき、選択肢を残しておく。" }, { id: "q26", t: "問題の一つひとつに分けて考える。" }, { id: "q27", t: "最も困難な問題の解決策を見つける。" }, { id: "q28", t: "必要なことを友人に手伝ってもらう。" }, { id: "q29", t: "家族や友人から情緒的な支援を得る。" }, { id: "q30", t: "友人をつくる。" },
+        ]
+      },
+    };
+
+    const POST = {
+      code: [{ id: "q1", type: "code", label: "匿名コードを確認してください。", isPost: true }],
+      swls: {
+        title: "§1.", inst: "以下の各文について、あなたの考えに最も近い数字をお選びください。正解や不正解はありません。感じたままに正直にお答えください。",
+        scaleNote: ["1：全く当てはまらない", "2：あまり当てはまらない", "3：どちらかといえば当てはまらない", "4：どちらともいえない", "5：どちらかといえば当てはまる", "6：やや当てはまる", "7：非常によく当てはまる"],
+        scale: L7A, items: [
+          { id: "q2", t: "私は自分の人生に満足している。" }, { id: "q3", t: "私の人生は、とても素晴らしい状態だ。" }, { id: "q4", t: "大体において、私の人生は理想に近い。" }, { id: "q5", t: "私はこれまで、自分の人生に求める大切なものを得てきた。" }, { id: "q6", t: "もう一度人生をやり直せるとしても、ほとんど何も変えないだろう。" },
+        ]
+      },
+      sig: {
+        title: "§4.", inst: "以下の文章は、あなたの人生に対する考えを表しています。それぞれについて、あなた自身にどの程度当てはまるかをお答えください。",
+        scale: L7A, items: [
+          { id: "q7", t: "私の人生は価値あるものである。" },
+          { id: "q8", t: "私の個人的な存在は重要である。" },
+          { id: "q9", t: "私は毎日、人生は生きるに値するという感覚を味わっている。" },
+          { id: "q38", t: "自分の人生で起きた出来事を、必然のものとして受け入れられるようになってきた。" },
+          { id: "q39", t: "自分の人生のさまざまな出来事の中に、一本の意味の糸が通っているのを感じる。" },
+          { id: "q40", t: "自分が経験した苦しみにも、意味があったと思う。" },
+        ]
+      },
+      cses: {
+        title: "§2.", inst: "物事がうまくいかないときや、問題を抱えているとき、以下のことをどのくらい自信を持ってできますか。0（まったくできない）から10（確実にできる）の中から当てはまる数字を選んでください。", scale: C11, items: [
+          { id: "q10", t: "つらい問題を小さな部分に分けて考える。" }, { id: "q11", t: "変更可能なことと変更できないことを整理する。" }, { id: "q12", t: "不快な考えを頭から追い払う。" }, { id: "q13", t: "不快な考えから気をそらす。" }, { id: "q14", t: "不快な考えで動揺しないようにする。" }, { id: "q15", t: "問題に直面したとき、行動計画を立てて実行する。" }, { id: "q16", t: "悲しい気持ちにならないようにする。" }, { id: "q17", t: "ストレスを感じたとき、選択肢を残しておく。" }, { id: "q18", t: "問題の一つひとつに分けて考える。" }, { id: "q19", t: "最も困難な問題の解決策を見つける。" }, { id: "q20", t: "必要なことを友人に手伝ってもらう。" }, { id: "q21", t: "家族や友人から情緒的な支援を得る。" }, { id: "q22", t: "友人をつくる。" },
+        ]
+      },
+      emot: {
+        title: "§5.", inst: "このゲームをプレイして、以下の感情をどの程度感じましたか。最もよく当てはまる数字をお選びください。",
+        scale: L7A, items: [
+          { id: "q41", t: "悲しい気持ちになった。" },
+          { id: "q42", t: "胸が締め付けられるような気持ちになった。" },
+          { id: "q43", t: "不安や恐れを感じた。" },
+          { id: "q44", t: "大切なものへの感謝を感じた。" },
+          { id: "q45", t: "ゲームの登場人物や状況に共感した。" },
+          { id: "q46", t: "ゲームの体験が心に響いた。" },
+          { id: "q47", t: "懐かしい気持ちになった。" },
+          { id: "q48", t: "ゲームの世界に引き込まれた。" },
+        ]
+      },
+      refl: {
+        title: "§6.", inst: "このゲームをプレイした後、以下のことはどの程度あてはまりますか。最もよく当てはまる数字をお選びください。",
+        scale: L7A, items: [
+          { id: "q49", t: "ゲームの体験から、何か意味を見出せるかどうかについて考えた。" },
+          { id: "q50", t: "ゲームの体験を通じて、自分が何か学べたかどうかについて考えた。" },
+          { id: "q51", t: "ゲームの体験が、自分の世界観や信念を変えたかどうかについて考えた。" },
+          { id: "q52", t: "ゲームの体験が、自分のこれからにとってどんな意味を持つかについて考えた。" },
+          { id: "q53", t: "ゲームの体験が自分にどのような影響を与えたかについて、意図的に考えた。" },
+        ]
+      },
+      gameSelect: [
+        { id: "q57", type: "radio", label: "今回ご体験いただいたゲームタイトルを選択してください。", opts: ["Dice of Destiny（ダイスゲーム）", "Straying（ノベルゲーム）", "その他"], hasOther: true, otherIdx: 2 },
+        { id: "q58", type: "textarea", label: "今回ご体験いただいたゲームや、それに伴う一連の活動に対するご感想・ご意見があればお聞かせください。", ph: "自由にご記入ください（任意）" },
+      ],
+    };
+
+    // --- Shuffle utilities ---
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function getShuffledItems(key, items) {
+      try {
+        const saved = localStorage.getItem(key);
+        if (saved) {
+          const order = JSON.parse(saved);
+          if (Array.isArray(order) && order.length === items.length) {
+            return order.map(i => items[i]);
+          }
+        }
+        const indices = shuffleArray(items.map((_, i) => i));
+        localStorage.setItem(key, JSON.stringify(indices));
+        return indices.map(i => items[i]);
+      } catch (e) {
+        return shuffleArray(items);
+      }
+    }
+
+    // --- Send to Google Sheets ---
+    async function sendToSheets(type, answers, ts) {
+      if (!GAS_URL) return { skipped: true };
+      try {
+        await fetch(GAS_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ type, answers, timestamp: ts }), redirect: "follow" });
+        return { success: true };
+      } catch (e) { console.error("送信エラー:", e); return { success: false, error: e.message }; }
+    }
+
+    // --- Components ---
+    function Bar({ cur, tot }) {
+      const pct = Math.round(cur / tot * 100);
+      return <div style={{ position: "sticky", top: 0, zIndex: 100, background: P.bgSolid, padding: "12px 0 8px", borderBottom: `1px solid ${P.bdr}` }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 13, color: P.mut }}><span>回答の進捗</span><span>{pct}%</span></div>
+        <div style={{ height: 6, background: P.bdr, borderRadius: 3, overflow: "hidden" }}><div style={{ height: "100%", width: `${pct}%`, background: `linear-gradient(90deg,${P.pri},${P.priL})`, borderRadius: 3, transition: "width 0.4s ease" }} /></div>
+      </div>;
+    }
+
+    function SQ({ item, scale, value, onChange, displayNum }) {
+      const n = scale.max - scale.min + 1;
+      const vals = Array.from({ length: n }, (_, i) => scale.min + i);
+      const lFirst = scale.labels[0]; const lLast = scale.labels[n - 1];
+      return <div style={{ padding: "20px 0", borderBottom: `1px solid ${P.bdr}` }}>
+        <p style={{ margin: "0 0 14px", fontSize: 15, color: P.txt, lineHeight: 1.7 }}><span style={{ color: P.acc, fontWeight: 600, marginRight: 8, fontSize: 13 }}>{displayNum}.</span>{item.t}</p>
+        <div style={{ maxWidth: Math.min(n * 56, 620) }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            {vals.map((v, i) => {
+              const sel = value === v; return <div key={v} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: "1 1 0", minWidth: 0 }}>
+                <button onClick={() => onChange(v)} style={{ width: 36, height: 36, borderRadius: "50%", border: sel ? `2px solid ${P.sel}` : `2px solid rgba(255,255,255,0.2)`, background: sel ? P.sel : "transparent", color: sel ? "#fff" : P.mut, fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
+                  onMouseEnter={e => { if (!sel) { e.target.style.borderColor = P.priL; e.target.style.background = P.selBg } }} onMouseLeave={e => { if (!sel) { e.target.style.borderColor = "rgba(255,255,255,0.2)"; e.target.style.background = "transparent" } }}>{v}</button>
+              </div>
+            })}
+          </div>
+          {(lFirst || lLast) && <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+            <span style={{ fontSize: 10, color: P.mut, lineHeight: 1.3 }}>{lFirst}</span>
+            <span style={{ fontSize: 10, color: P.mut, lineHeight: 1.3, textAlign: "right" }}>{lLast}</span>
+          </div>}
+        </div>
+      </div>;
+    }
+
+    function SS({ section, storageKey, answers, set }) {
+      const [items] = useState(() => getShuffledItems(storageKey, section.items));
+      return <div style={{ marginBottom: 32 }}>
+        <div style={{ background: "linear-gradient(90deg,#1E3A6E,#2B5EA7)", color: "#fff", padding: "16px 24px", borderRadius: "10px 10px 0 0", fontFamily: "'Noto Serif JP',serif" }}><h2 style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>{section.title}</h2></div>
+        <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "8px 24px 16px" }}>
+          <p style={{ fontSize: 14, color: "#fff", lineHeight: 1.8, margin: "12px 0 8px" }}>{section.inst}</p>
+          {section.scaleNote && <div style={{ display: "flex", flexDirection: "column", gap: 2, fontSize: 12, color: P.mut, background: P.secBg, borderRadius: 6, padding: "8px 12px", margin: "0 0 8px" }}>
+            {section.scaleNote.map((n, i) => <span key={i}>{n}</span>)}
+          </div>}
+          {items.map((it, idx) => <SQ key={it.id} item={it} scale={section.scale} value={answers[it.id]} onChange={v => set(it.id, v)} displayNum={idx + 1} />)}
+        </div>
+      </div>;
+    }
+
+    function CodeGen({ value, onChange, isPost }) {
+      const BLOOD = [{ v: "1", l: "A型" }, { v: "2", l: "B型" }, { v: "3", l: "O型" }, { v: "4", l: "AB型" }, { v: "5", l: "不明" }];
+      const ROWS = [{ v: "1", l: "あ行（あ〜お）" }, { v: "2", l: "か行（か〜こ）" }, { v: "3", l: "さ行（さ〜そ）" }, { v: "4", l: "た行（た〜と）" }, { v: "5", l: "な行（な〜の）" }, { v: "6", l: "は行（は〜ほ）" }, { v: "7", l: "ま行（ま〜も）" }, { v: "8", l: "や行（や・ゆ・よ）" }, { v: "9", l: "ら行（ら〜ろ）" }, { v: "0", l: "わ行（わ・を・ん）" }];
+      const parse = (v) => {
+        if (v && v.length >= 7) {
+          const mm = parseInt(v.substring(0, 2), 10);
+          const dd = parseInt(v.substring(2, 4), 10);
+          const bl = v.substring(4, 5);
+          const fr = v.substring(5, 6);
+          const gr = v.substring(6, 7);
+          if (!isNaN(mm) && !isNaN(dd) && mm >= 1 && mm <= 12 && dd >= 1 && dd <= 31
+            && BLOOD.some(o => o.v === bl) && ROWS.some(o => o.v === fr) && ROWS.some(o => o.v === gr))
+            return { month: mm.toString(), day: dd.toString(), bl, fr, gr };
+        }
+        return { month: "", day: "", bl: "", fr: "", gr: "" };
+      };
+      const p = parse(value);
+      const [month, setMonth] = useState(p.month);
+      const [day, setDay] = useState(p.day);
+      const [bl, setBl] = useState(p.bl);
+      const [fr, setFr] = useState(p.fr);
+      const [gr, setGr] = useState(p.gr);
+      const [autoLoaded, setAutoLoaded] = useState(false);
+      useEffect(() => { if (isPost && !value) { try { const saved = localStorage.getItem("survey_anon_code"); if (saved) { const p2 = parse(saved); if (p2.month) { setMonth(p2.month); setDay(p2.day); setBl(p2.bl); setFr(p2.fr); setGr(p2.gr); onChange(saved); setAutoLoaded(true) } } } catch (e) { } } }, []);
+
+      const build = (m, d, b, f, g) => (m && d && b && f && g) ? m.padStart(2, "0") + d.padStart(2, "0") + b + f + g : "";
+      const cur = () => build(month, day, bl, fr, gr);
+
+      const onM = (m) => { setMonth(m); onChange(build(m, day, bl, fr, gr)); };
+      const onD = (d) => { setDay(d); onChange(build(month, d, bl, fr, gr)); };
+      const onB = (b) => { setBl(b); onChange(build(month, day, b, fr, gr)); };
+      const onF = (f) => { setFr(f); onChange(build(month, day, bl, f, gr)); };
+      const onG = (g) => { setGr(g); onChange(build(month, day, bl, fr, g)); };
+
+      const code = cur();
+      const filled = [month, day, bl, fr, gr].filter(Boolean).length;
+      const sel = { width: "100%", padding: "10px 14px", border: `1.5px solid ${P.bdr}`, borderRadius: 8, fontSize: 15, fontFamily: "'Noto Sans JP',sans-serif", background: "rgba(255,255,255,0.08)", color: P.txt, outline: "none", cursor: "pointer" };
+
+      const seg = (txt, active) => <span style={{ color: active ? P.priL : "rgba(255,255,255,0.25)", transition: "color 0.2s" }}>{txt}</span>;
+
+      return <div>
+        {isPost && <p style={{ fontSize: 13, color: autoLoaded ? "#4CAF50" : P.acc, marginBottom: 12, lineHeight: 1.7, padding: autoLoaded ? "10px 14px" : 0, background: autoLoaded ? "rgba(76,175,80,0.12)" : "transparent", borderRadius: 8, border: autoLoaded ? "1px solid rgba(76,175,80,0.3)" : "none" }}>{autoLoaded ? "✓ 事前アンケートのコードが自動入力されました。内容をご確認ください。" : "事前アンケートと同じ項目を選択してください。同じ匿名コードが自動で生成されます。"}</p>}
+        <p style={{ fontSize: 13, color: P.mut, marginBottom: 16, lineHeight: 1.7 }}>5つの項目を選択すると、匿名コード（7桁）が自動で生成されます。</p>
+
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+          <div style={{ flex: "1 1 90px", minWidth: 90 }}>
+            <label style={{ display: "block", fontSize: 12, color: P.mut, marginBottom: 6 }}>生まれた月</label>
+            <select value={month} onChange={e => onM(e.target.value)} style={sel}
+              onFocus={e => e.target.style.borderColor = P.pri} onBlur={e => e.target.style.borderColor = P.bdr}>
+              <option value="">-- 月 --</option>
+              {Array.from({ length: 12 }, (_, i) => i + 1).map(m => <option key={m} value={m}>{m}月</option>)}
+            </select>
+          </div>
+          <div style={{ flex: "1 1 90px", minWidth: 90 }}>
+            <label style={{ display: "block", fontSize: 12, color: P.mut, marginBottom: 6 }}>生まれた日</label>
+            <select value={day} onChange={e => onD(e.target.value)} style={sel}
+              onFocus={e => e.target.style.borderColor = P.pri} onBlur={e => e.target.style.borderColor = P.bdr}>
+              <option value="">-- 日 --</option>
+              {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={d}>{d}日</option>)}
+            </select>
+          </div>
+          <div style={{ flex: "1 1 110px", minWidth: 110 }}>
+            <label style={{ display: "block", fontSize: 12, color: P.mut, marginBottom: 6 }}>血液型</label>
+            <select value={bl} onChange={e => onB(e.target.value)} style={sel}
+              onFocus={e => e.target.style.borderColor = P.pri} onBlur={e => e.target.style.borderColor = P.bdr}>
+              <option value="">-- 選択 --</option>
+              {BLOOD.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
+            </select>
+          </div>
+          <div style={{ flex: "1 1 150px", minWidth: 150 }}>
+            <label style={{ display: "block", fontSize: 12, color: P.mut, marginBottom: 6 }}>名字の頭文字の行</label>
+            <select value={fr} onChange={e => onF(e.target.value)} style={sel}
+              onFocus={e => e.target.style.borderColor = P.pri} onBlur={e => e.target.style.borderColor = P.bdr}>
+              <option value="">-- 選択 --</option>
+              {ROWS.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
+            </select>
+          </div>
+          <div style={{ flex: "1 1 150px", minWidth: 150 }}>
+            <label style={{ display: "block", fontSize: 12, color: P.mut, marginBottom: 6 }}>名前の頭文字の行</label>
+            <select value={gr} onChange={e => onG(e.target.value)} style={sel}
+              onFocus={e => e.target.style.borderColor = P.pri} onBlur={e => e.target.style.borderColor = P.bdr}>
+              <option value="">-- 選択 --</option>
+              {ROWS.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div style={{ background: code ? "rgba(91,138,240,0.12)" : "rgba(255,255,255,0.04)", border: `1.5px solid ${code ? P.pri : P.bdr}`, borderRadius: 10, padding: "16px 20px", transition: "all 0.3s" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+            <div>
+              <p style={{ fontSize: 12, color: P.mut, margin: "0 0 6px" }}>あなたの匿名コード</p>
+              <p style={{ fontSize: 26, fontWeight: 700, letterSpacing: 4, fontFamily: "monospace", margin: 0 }}>
+                {seg(month ? month.padStart(2, "0") : "MM", !!month)}
+                {seg(day ? day.padStart(2, "0") : "DD", !!day)}
+                <span style={{ margin: "0 2px" }}>-</span>
+                {seg(bl || "B", !!bl)}
+                {seg(fr || "F", !!fr)}
+                {seg(gr || "G", !!gr)}
+              </p>
+            </div>
+            <div style={{ flex: 1, minWidth: 160 }}>
+              {code
+                ? <p style={{ fontSize: 12, color: P.mut, margin: 0, lineHeight: 1.7 }}>{isPost ? "このコードが事前アンケートと一致していることを確認してください。" : <span>このコードはゲームの体験や事後アンケートでも使用します。<br />記録しておいてください。</span>}</p>
+                : <p style={{ fontSize: 12, color: P.mut, margin: 0, lineHeight: 1.7 }}>残り <strong style={{ color: P.acc }}>{5 - filled}</strong> 項目を選択するとコードが完成します。</p>
+              }
+            </div>
+          </div>
+        </div>
+      </div>;
+    }
+
+    function DQ({ q, value, onChange, ov, onOv, displayNum }) {
+      const fs = { width: "100%", padding: "10px 14px", border: `1.5px solid ${P.bdr}`, borderRadius: 8, fontSize: 15, fontFamily: "'Noto Sans JP',sans-serif", background: "rgba(255,255,255,0.08)", color: P.txt, outline: "none", boxSizing: "border-box", transition: "border-color 0.2s" };
+      const label = displayNum ? `${displayNum}.` : q.id.toUpperCase();
+      if (q.type === "code") return <div style={{ marginBottom: 24 }}>
+        <label style={{ display: "block", fontSize: 15, color: P.txt, marginBottom: 12, lineHeight: 1.7, fontWeight: 500 }}>{q.label}</label>
+        <CodeGen value={value} onChange={onChange} isPost={q.isPost} />
+      </div>;
+      if (q.type === "text" || q.type === "number") return <div style={{ marginBottom: 24 }}>
+        <label style={{ display: "block", fontSize: 15, color: P.txt, marginBottom: 8, lineHeight: 1.7 }}><span style={{ color: P.acc, fontWeight: 600, marginRight: 8, fontSize: 13 }}>{label}</span>{q.label}</label>
+        {q.hint && <p style={{ fontSize: 12, color: P.mut, margin: "-4px 0 8px" }}>{q.hint}</p>}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <input type={q.type === "number" ? "number" : "text"} value={value || ""} onChange={e => onChange(e.target.value)} placeholder={q.ph} style={{ ...fs, maxWidth: q.type === "number" ? 120 : 300 }} onFocus={e => e.target.style.borderColor = P.pri} onBlur={e => e.target.style.borderColor = P.bdr} />
+          {q.suf && <span style={{ fontSize: 15, color: P.mut }}>{q.suf}</span>}
+        </div>
+      </div>;
+      if (q.type === "textarea") return <div style={{ marginBottom: 24 }}>
+        <label style={{ display: "block", fontSize: 15, color: P.txt, marginBottom: 8, lineHeight: 1.7 }}><span style={{ color: P.acc, fontWeight: 600, marginRight: 8, fontSize: 13 }}>{label}</span>{q.label}</label>
+        <textarea value={value || ""} onChange={e => onChange(e.target.value)} placeholder={q.ph} rows={5} style={{ ...fs, resize: "vertical", minHeight: 100 }} onFocus={e => e.target.style.borderColor = P.pri} onBlur={e => e.target.style.borderColor = P.bdr} />
+      </div>;
+      if (q.type === "radio") return <div style={{ marginBottom: 24 }}>
+        <p style={{ fontSize: 15, color: P.txt, marginBottom: 10, lineHeight: 1.7 }}><span style={{ color: P.acc, fontWeight: 600, marginRight: 8, fontSize: 13 }}>{label}</span>{q.label}</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {q.opts.map((o, i) => {
+            const s = value === o; return <label key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 8, cursor: "pointer", transition: "all 0.15s", background: s ? P.selBg : "transparent", border: `1.5px solid ${s ? P.pri : "transparent"}`, fontSize: 14 }}>
+              <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${s ? P.pri : P.bdr}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{s && <div style={{ width: 10, height: 10, borderRadius: "50%", background: P.pri }} />}</div>
+              <span style={{ color: P.txt }}>{o}</span><input type="radio" name={q.id} checked={s} onChange={() => onChange(o)} style={{ display: "none" }} />
+            </label>
+          })}
+          {q.hasOther && value === q.opts[q.otherIdx] && <input type="text" value={ov || ""} onChange={e => onOv(e.target.value)} placeholder="具体的にお書きください" style={{ ...fs, maxWidth: 300, marginLeft: 42 }} onFocus={e => e.target.style.borderColor = P.pri} onBlur={e => e.target.style.borderColor = P.bdr} />}
+        </div>
+      </div>;
+      if (q.type === "checkbox") {
+        const sel = value || []; return <div style={{ marginBottom: 24 }}>
+          <p style={{ fontSize: 15, color: P.txt, marginBottom: 10, lineHeight: 1.7 }}><span style={{ color: P.acc, fontWeight: 600, marginRight: 8, fontSize: 13 }}>{q.id.toUpperCase()}</span>{q.label}</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {q.opts.map((o, i) => {
+              const c = sel.includes(o); return <label key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 8, cursor: "pointer", transition: "all 0.15s", background: c ? P.selBg : "transparent", border: `1.5px solid ${c ? P.pri : "transparent"}`, fontSize: 14 }}>
+                <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${c ? P.pri : P.bdr}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: c ? P.pri : "transparent" }}>{c && <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="2" fill="none" /></svg>}</div>
+                <span style={{ color: P.txt }}>{o}</span><input type="checkbox" checked={c} onChange={() => { const nx = c ? sel.filter(s => s !== o) : [...sel, o]; onChange(nx) }} style={{ display: "none" }} />
+              </label>
+            })}
+            {q.hasOther && sel.includes(q.opts[q.otherIdx]) && <input type="text" value={ov || ""} onChange={e => onOv(e.target.value)} placeholder="具体的にお書きください" style={{ ...fs, maxWidth: 300, marginLeft: 42 }} onFocus={e => e.target.style.borderColor = P.pri} onBlur={e => e.target.style.borderColor = P.bdr} />}
+          </div>
+        </div>;
+      }
+      return null;
+    }
+
+    // --- Main App ---
+    function App() {
+      const [view, setView] = useState("home");
+      const [ans, setAns] = useState({});
+      const [oth, setOth] = useState({});
+      const [done, setDone] = useState(false);
+      const [errs, setErrs] = useState(false);
+      const [saving, setSaving] = useState(false);
+      const [gs, setGs] = useState(null);
+
+      const sa = useCallback((id, v) => setAns(p => ({ ...p, [id]: v })), []);
+      const so = useCallback((id, v) => setOth(p => ({ ...p, [id]: v })), []);
+      const reset = () => { setView("home"); setAns({}); setOth({}); setDone(false); setErrs(false); setGs(null); window.scrollTo(0, 0) };
+
+      const cnt = () => Object.keys(ans).filter(k => { const v = ans[k]; if (Array.isArray(v)) return v.length > 0; return v !== undefined && v !== null && v !== "" }).length;
+      const tot = () => {
+        if (view === "pre") return PRE.demo.length + PRE.swls.items.length + PRE.cses.items.length;
+        if (view === "post") return POST.code.length + POST.swls.items.length + POST.cses.items.length + POST.emot.items.length + POST.refl.items.length + POST.gameSelect.length;
+        return 1;
+      };
+      const reqIds = () => {
+        if (view === "pre") return ["q1"]; // 匿名コード(q1)のみ必須、残りはすべて任意
+        if (view === "post") return ["q1"]; // 匿名コード(q1)のみ必須、残りはすべて任意
+        return [];
+      };
+      const miss = () => reqIds().filter(id => { const v = ans[id]; if (Array.isArray(v)) return v.length === 0; return v === undefined || v === null || v === "" });
+
+      const submit = () => {
+        const m = miss();
+        if (m.length > 0) { setErrs(true); const el = document.getElementById(`f-${m[0]}`); if (el) el.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+        const now = new Date(); const ts = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().replace("Z", "");
+        const fa = { ...ans, game: "Dice of Destiny" }; Object.keys(oth).forEach(k => { if (oth[k]) fa[`${k}_other`] = oth[k] });
+        sendToSheets(view, fa, ts);
+        if (view === "pre" && fa.q1) { try { localStorage.setItem("survey_anon_code", fa.q1) } catch (e) { } }
+        setDone(true); window.scrollTo(0, 0);
+      };
+
+      // HOME
+      if (view === "home") return <div style={{ minHeight: "100vh", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+        <div style={{ maxWidth: 540, width: "100%" }}>
+          <div style={{ textAlign: "center", marginBottom: 36 }}>
+            <div style={{ width: 64, height: 64, borderRadius: "50%", background: "linear-gradient(135deg,#2B5EA7,#5B8AF0)", margin: "0 auto 20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" /></svg>
+            </div>
+            <h1 style={{ fontFamily: "'Noto Serif JP',serif", fontSize: 24, color: "#FFFFFF", marginBottom: 16, fontWeight: 700, lineHeight: 1.5 }}>ゲーム体験についてのご質問に<br />ご協力ください。</h1>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.85)", lineHeight: 1.9, textAlign: "left", margin: "0 auto", maxWidth: 500 }}>この質問は，ゲームを用いて人生を省察する体験の影響について確認することを目的としています。</p>
+          </div>
+          <div style={{ marginBottom: 28, paddingLeft: 4 }}>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 2.0, margin: "0 0 16px" }}>ここで得られたデータは統計的に処理され，個人情報が公開されることはありません。<br />また，回答は任意であり，回答の有無があなたの評価に影響することはありません。<br />回答結果が評価に影響することもありません。</p>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 2.0, margin: 0 }}>できるだけ多くの方のご協力を必要としております。<br />ご協力の程よろしくお願い申し上げます。</p>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 28 }}>
+            <button onClick={() => { setView("pre"); setAns({}); setOth({}); setDone(false); setErrs(false); setGs(null); window.scrollTo(0, 0) }}
+              style={{ background: "linear-gradient(135deg,rgba(91,138,240,0.15),rgba(43,94,167,0.2))", border: "1.5px solid rgba(91,138,240,0.35)", borderRadius: 12, padding: "24px 28px", textAlign: "left", cursor: "pointer", transition: "all 0.2s", boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "#5B8AF0"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(91,138,240,0.3)"; e.currentTarget.style.background = "linear-gradient(135deg,rgba(91,138,240,0.25),rgba(43,94,167,0.3))" }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(91,138,240,0.35)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)"; e.currentTarget.style.background = "linear-gradient(135deg,rgba(91,138,240,0.15),rgba(43,94,167,0.2))" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div><h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 17, color: "rgba(255,255,255,0.85)", margin: "0 0 6px", fontWeight: 500 }}>ゲーム体験前のご質問</h3>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.6 }}>人生満足度、コーピングに関する質問</p>
+                  <p style={{ fontSize: 12, color: P.acc, margin: "6px 0 0", fontWeight: 500 }}>推定時間：3〜5分　|　全27問</p></div>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B8AF0" strokeWidth="2.5"><path d="M9 18l6-6-6-6" /></svg>
+              </div>
+            </button>
+
+            <a href="https://sunaonahito.github.io/dice-of-destiny-online4/" target="_blank" rel="noopener noreferrer" style={{ display: "block", background: "linear-gradient(135deg,rgba(232,164,74,0.15),rgba(200,130,40,0.2))", border: "1.5px solid rgba(232,164,74,0.4)", borderRadius: 12, padding: "24px 28px", textAlign: "left", cursor: "pointer", transition: "all 0.2s", boxShadow: "0 2px 8px rgba(0,0,0,0.2)", textDecoration: "none" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = P.acc; e.currentTarget.style.boxShadow = "0 4px 20px rgba(232,164,74,0.3)"; e.currentTarget.style.background = "linear-gradient(135deg,rgba(232,164,74,0.25),rgba(200,130,40,0.3))" }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(232,164,74,0.4)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)"; e.currentTarget.style.background = "linear-gradient(135deg,rgba(232,164,74,0.15),rgba(200,130,40,0.2))" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div><h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 17, color: "rgba(255,255,255,0.85)", margin: "0 0 6px", fontWeight: 500 }}>ゲーム体験</h3>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.6 }}>ゲームを体験してください</p>
+                  <p style={{ fontSize: 12, color: P.acc, margin: "6px 0 0", fontWeight: 500 }}>推定時間：20〜30分　|　全3ステージ</p></div>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={P.acc} strokeWidth="2.5"><path d="M9 18l6-6-6-6" /></svg>
+              </div>
+            </a>
+
+            <button onClick={() => { setView("post"); setAns({}); setOth({}); setDone(false); setErrs(false); setGs(null); window.scrollTo(0, 0) }}
+              style={{ background: "linear-gradient(135deg,rgba(91,138,240,0.15),rgba(43,94,167,0.2))", border: "1.5px solid rgba(91,138,240,0.35)", borderRadius: 12, padding: "24px 28px", textAlign: "left", cursor: "pointer", transition: "all 0.2s", boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "#5B8AF0"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(91,138,240,0.3)"; e.currentTarget.style.background = "linear-gradient(135deg,rgba(91,138,240,0.25),rgba(43,94,167,0.3))" }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(91,138,240,0.35)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)"; e.currentTarget.style.background = "linear-gradient(135deg,rgba(91,138,240,0.15),rgba(43,94,167,0.2))" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div><h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 17, color: "rgba(255,255,255,0.85)", margin: "0 0 6px", fontWeight: 500 }}>ゲーム体験後のご質問</h3>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.6 }}>人生満足度、コーピングに関する質問</p>
+                  <p style={{ fontSize: 12, color: P.acc, margin: "6px 0 0", fontWeight: 500 }}>推定時間：3〜5分　|　全27問</p></div>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B8AF0" strokeWidth="2.5"><path d="M9 18l6-6-6-6" /></svg>
+              </div>
+            </button>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 24, textAlign: "center" }}>
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 20 }}>この回答をもちまして，本研究の協力に同意いただいたものとさせていただきます。<br />すべての回答は匿名です。</p>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.9, textAlign: "center" }}>
+              <p style={{ margin: "0 0 4px", fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>調査責任者：東京大学情報学環　藤本　徹</p>
+              <p style={{ margin: "0 0 16px", fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>調査実施者：東京大学情報学環　坂井裕紀</p>
+              <p style={{ margin: 0 }}>ご不明な点がありましたら，下記までご連絡ください。<br />連絡先（坂井 裕紀：さかい ひろのり）：<a href="mailto:hironori.sakai@iii.u-tokyo.ac.jp" style={{ color: "#7BA4F7" }}>hironori.sakai@iii.u-tokyo.ac.jp</a></p>
+            </div>
+          </div>
+        </div>
+      </div>;
+
+      // DONE
+      if (done) return <div style={{ minHeight: "100vh", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+        <div style={{ textAlign: "center", padding: "60px 24px", maxWidth: 600 }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>✓</div>
+          <h2 style={{ fontFamily: "'Noto Serif JP',serif", fontSize: 22, color: P.pri, marginBottom: 12 }}>{view === "post" ? "ご体験ありがとうございました" : "ご回答ありがとうございました"}</h2>
+          {view === "pre" ? <p style={{ fontSize: 15, color: P.mut, lineHeight: 1.8, maxWidth: 400, margin: "0 auto 20px" }}>ゲーム体験前のご質問への回答が完了しました。データは正常に記録されました。</p> : <div style={{ textAlign: "left", margin: "0 auto 28px" }}>
+            <p style={{ fontSize: 15, color: P.mut, lineHeight: 1.8, marginBottom: 20 }}>「あなたは何を選ぶ？-ゲームで体験する喪失と生の価値」の体験お疲れ様でした</p>
+            <p style={{ fontSize: 14, color: P.mut, lineHeight: 1.9, marginBottom: 20 }}>この体験が、あなたの健康と幸福の支えとなり<br />より充実した人生の一助となることを願っています</p>
+            <div style={{ borderTop: `1px solid ${P.bdr}`, margin: "0 0 20px" }}></div>
+            <p style={{ fontSize: 14, color: P.mut, lineHeight: 1.9, marginBottom: 16 }}>今回、ゲームを体験をされた方に、もう一方のゲームも自由にお楽しみいただける機会をご用意しました。以下のURLからそれぞれのゲームを体験することができます。</p>
+            <div style={{ background: "rgba(91,138,240,0.08)", border: `1px solid rgba(91,138,240,0.2)`, borderRadius: 10, padding: "18px 20px", marginBottom: 16 }}>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 700, marginBottom: 8 }}>■ Straying（ノベルゲーム）</p>
+              <a href="https://solventer.jp/straying" target="_blank" rel="noopener" style={{ fontSize: 13, color: P.pri, wordBreak: "break-all" }}>https://solventer.jp/straying</a>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.9)", fontWeight: 700, marginTop: 16, marginBottom: 8 }}>■ Dice of Destiny（ダイスゲーム）</p>
+              <a href="https://sunaonahito.github.io/dice-of-destiny-online3" target="_blank" rel="noopener" style={{ fontSize: 13, color: P.pri, wordBreak: "break-all" }}>https://sunaonahito.github.io/dice-of-destiny-online3</a>
+            </div>
+            <div style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${P.bdr}`, borderRadius: 10, padding: "18px 20px", marginBottom: 20 }}>
+              <p style={{ fontSize: 13, color: P.mut, fontWeight: 600, marginBottom: 10 }}>その他：以下のバージョンも体験できます</p>
+              <p style={{ fontSize: 13, color: P.mut, marginBottom: 4 }}>■ Dice of Destiny（8bit ver.）</p>
+              <a href="https://sunaonahito.github.io/dice-of-destiny-online2" target="_blank" rel="noopener" style={{ fontSize: 12, color: P.pri, wordBreak: "break-all" }}>https://sunaonahito.github.io/dice-of-destiny-online2</a>
+              <p style={{ fontSize: 13, color: P.mut, marginTop: 12, marginBottom: 4 }}>■ Dice of Destiny（English ver.）</p>
+              <a href="https://emergence-japan.github.io/dice-of-destiny" target="_blank" rel="noopener" style={{ fontSize: 12, color: P.pri, wordBreak: "break-all" }}>https://emergence-japan.github.io/dice-of-destiny</a>
+            </div>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>ゲームデータは収集していません。お時間の許す際にプレイいただけると幸いです。</p>
+          </div>}
+          <div>{view === "post" ? <a href="https://sunaonahito.github.io/Informed-consent/" style={{ display: "inline-block", padding: "12px 32px", background: "transparent", color: P.pri, border: `2px solid ${P.pri}`, borderRadius: 8, fontSize: 14, cursor: "pointer", fontWeight: 600, transition: "all 0.2s", textDecoration: "none" }}
+            onMouseEnter={e => { e.target.style.background = P.pri; e.target.style.color = "#fff" }} onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = P.pri }}>トップに戻る</a> : <button onClick={reset} style={{ padding: "12px 32px", background: "transparent", color: P.pri, border: `2px solid ${P.pri}`, borderRadius: 8, fontSize: 14, cursor: "pointer", fontWeight: 600, transition: "all 0.2s" }}
+            onMouseEnter={e => { e.target.style.background = P.pri; e.target.style.color = "#fff" }} onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = P.pri }}>トップに戻る</button>}</div>
+        </div>
+      </div>;
+
+      // FORM
+      const isPre = view === "pre"; const total = tot(); const answered = cnt(); const missing = errs ? miss() : [];
+      const missingCount = missing.length;
+      const showErrBanner = errs === true && missingCount > 0;
+      return <div style={{ minHeight: "100vh", background: "transparent" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 20px 60px" }}>
+          <Bar cur={answered} tot={total} />
+          <div style={{ padding: "28px 0 20px", borderBottom: `1px solid ${P.bdr}`, marginBottom: 28 }}>
+            <button onClick={() => { if (window.confirm("回答内容は保存されません。トップに戻りますか？")) reset() }} style={{ background: "none", border: "none", color: P.mut, cursor: "pointer", fontSize: 13, padding: 0, marginBottom: 12, display: "flex", alignItems: "center", gap: 4 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>トップに戻る
+            </button>
+            <h1 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 22, color: "rgba(255,255,255,0.85)", margin: 0, fontWeight: 500 }}>{isPre ? "ゲーム体験前のご質問" : "ゲーム体験後のご質問"}</h1>
+          </div>
+
+          {showErrBanner && <div style={{ background: "rgba(240,112,112,0.12)", border: "1px solid rgba(240,112,112,0.3)", borderRadius: 10, padding: "14px 20px", marginBottom: 24 }}>
+            <p style={{ color: P.err, fontSize: 14, margin: 0, fontWeight: 500 }}>未回答の必須項目が {missingCount} 件あります。ご確認ください。</p>
+          </div>}
+
+          <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderRadius: 10, padding: "20px 24px", marginBottom: 32 }}>
+            <h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 13, color: P.acc, margin: "0 0 16px", fontWeight: 600 }}>{"Q1"}</h3>
+            {(isPre ? PRE.demo : POST.code).map(q => {
+              const fieldErr = errs === true && missing.includes(q.id);
+              return <div key={q.id} id={`f-${q.id}`}>
+                <DQ q={q} value={ans[q.id]} onChange={v => sa(q.id, v)} ov={oth[q.id]} onOv={v => so(q.id, v)} />
+                {fieldErr && <p style={{ color: P.err, fontSize: 12, margin: "-16px 0 16px", fontWeight: 500 }}>{q.type === "code" ? "すべての項目を入力してコードを生成してください" : "この項目は必須です"}</p>}
+              </div>;
+            })}
+          </div>
+
+          {isPre ? <>
+            <div id="f-q10"><SS section={PRE.swls} storageKey="survey_order_pre_swls" answers={ans} set={sa} /></div>
+            <div id="f-q18"><SS section={PRE.cses} storageKey="survey_order_pre_cses" answers={ans} set={sa} /></div>
+          </> : <>
+            <div id="f-q2"><SS section={POST.swls} storageKey="survey_order_post_swls" answers={ans} set={sa} /></div>
+            <div id="f-q10"><SS section={POST.cses} storageKey="survey_order_post_cses" answers={ans} set={sa} /></div>
+            <div id="f-q41"><SS section={POST.emot} storageKey="survey_order_post_emot" answers={ans} set={sa} /></div>
+            <div id="f-q49"><SS section={POST.refl} storageKey="survey_order_post_refl" answers={ans} set={sa} /></div>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ background: "linear-gradient(90deg,#1E3A6E,#2B5EA7)", color: "#fff", padding: "16px 24px", borderRadius: "10px 10px 0 0", fontFamily: "'Noto Serif JP',serif" }}><h2 style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>§7.</h2></div>
+              <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "8px 24px 16px" }}>
+                {POST.gameSelect.map((q, idx) => <div key={q.id} id={`f-${q.id}`}><DQ q={q} value={ans[q.id]} onChange={v => sa(q.id, v)} ov={oth[q.id]} onOv={v => so(q.id, v)} displayNum={idx + 1} /></div>)}
+              </div>
+            </div>
+          </>}
+
+          <div style={{ textAlign: "center", padding: "20px 0 40px" }}>
+            <p style={{ fontSize: 13, color: P.mut, marginBottom: 16 }}>すべての回答を入力したら、「完了」ボタンを押してください。</p>
+            <button onClick={submit} disabled={saving} style={{ padding: "14px 48px", background: P.pri, color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 600, cursor: saving ? "wait" : "pointer", transition: "all 0.2s", opacity: saving ? 0.7 : 1, boxShadow: "0 2px 12px rgba(91,138,240,0.3)" }}
+              onMouseEnter={e => { if (!saving) e.target.style.background = P.priL }} onMouseLeave={e => { if (!saving) e.target.style.background = P.pri }}>{saving ? "送信中..." : "完了"}</button>
+          </div>
+        </div>
+      </div>;
+    }
+
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
+
+</html>
