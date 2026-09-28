@@ -405,7 +405,7 @@
         const m = miss();
         if (m.length > 0) { setErrs(true); const el = document.getElementById(`f-${m[0]}`); if (el) el.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
         const now = new Date(); const ts = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().replace("Z", "");
-        const fa = { ...ans, game: "Dice of Destiny" }; Object.keys(oth).forEach(k => { if (oth[k]) fa[`${k}_other`] = oth[k] });
+        const fa = { ...ans }; Object.keys(oth).forEach(k => { if (oth[k]) fa[`${k}_other`] = oth[k] });
         sendToSheets(view, fa, ts);
         if (view === "pre" && fa.q1) { try { localStorage.setItem("survey_anon_code", fa.q1) } catch (e) { } }
         setDone(true); window.scrollTo(0, 0);
