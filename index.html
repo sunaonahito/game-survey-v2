@@ -146,8 +146,10 @@
       "胸が締め付けられるような気持ちになった。": "I felt a tightness in my chest.",
       "不安や恐れを感じた。": "I felt anxiety or fear.",
       "大切なものへの感謝を感じた。": "I felt gratitude for important things.",
-      "ゲームの登場人物や状況に共感した。": "I sympathized/empathized with the game's characters or situations.",
-      "ゲームの体験が心に響いた。": "The game experience resonated with me.",
+      "ゲームの登場人物の立場になって、その人が感じていることを理解できた。": "I could put myself in the characters' position and understand what they were feeling.",
+      "ゲームの登場人物を気の毒に思い、うまくいってほしいと願った。": "I felt sorry for the characters and hoped that things would turn out well for them.",
+      "ゲームの物語やメッセージが心に響いた。": "The story and messages of the game touched me deeply.",
+      "登場人物が経験する喪失が、自分自身の経験と重なった。": "The characters' experiences of loss resonated with experiences in my own life.",
       "懐かしい気持ちになった。": "I felt nostalgic.",
       "ゲームの世界に引き込まれた。": "I was drawn into the world of the game.",
       "このゲームをプレイした後、以下のことはどの程度あてはまりますか。最もよく当てはまる数字をお選びください。": "To what extent do the following statements apply to you after playing this game? Please select the number that best applies.",
@@ -724,8 +726,10 @@
           { id: "q42", t: "胸が締め付けられるような気持ちになった。" },
           { id: "q43", t: "不安や恐れを感じた。" },
           { id: "q44", t: "大切なものへの感謝を感じた。" },
-          { id: "q45", t: "ゲームの登場人物や状況に共感した。" },
-          { id: "q46", t: "ゲームの体験が心に響いた。" },
+          { id: "q45", t: "ゲームの登場人物の立場になって、その人が感じていることを理解できた。" },
+          { id: "q73", t: "ゲームの登場人物を気の毒に思い、うまくいってほしいと願った。" },
+          { id: "q46", t: "ゲームの物語やメッセージが心に響いた。" },
+          { id: "q74", t: "登場人物が経験する喪失が、自分自身の経験と重なった。" },
           { id: "q47", t: "懐かしい気持ちになった。" },
           { id: "q48", t: "ゲームの世界に引き込まれた。" },
         ]
@@ -1013,7 +1017,7 @@
  ]
 },
  swls: { ...POST.swls, title: "Scale 4: Satisfaction With Life Scale (SWLS)" },
- emot: { ...POST.emot, title: "Scale 5: Emotional Experience of the Game", inst: "While playing this game, to what extent did you experience each of the following? Please select the number that best applies.", items: [...POST.emot.items.filter(i => i.id !== "q45" && i.id !== "q46"), ...([
+ emot: { ...POST.emot, title: "Scale 5: Emotional Experience of the Game", inst: "While playing this game, to what extent did you experience each of the following? Please select the number that best applies.", items: [...POST.emot.items.filter(i => !["q45", "q46", "q73", "q74"].includes(i.id)), ...([
  {
   "id": "q45",
   "t": "I could put myself in the characters' position and understand what they were feeling."
