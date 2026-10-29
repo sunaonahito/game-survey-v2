@@ -795,6 +795,269 @@
       return "unknown";
     }
 
+    // --- Post-test content for the English version (follows POST__Test.docx) ---
+    const POST_EN = {
+ completed: {
+ "id": "q60",
+ "dn": "Q1",
+ "type": "radio",
+ "label": "Did you complete the interactive game activity today?",
+ "opts": [
+  "Yes, fully completed",
+  "Partially completed",
+  "No"
+ ]
+},
+ engage: {
+ "title": "Q2. Game Engagement & Immersion Check",
+ "inst": "Please rate your experience during the game on a scale from 1 (Strongly Disagree) to 7 (Strongly Agree).",
+ "scale": {
+  "min": 1,
+  "max": 7,
+  "labels": [
+   "Strongly Disagree",
+   "",
+   "",
+   "",
+   "",
+   "",
+   "Strongly Agree"
+  ]
+ },
+ "items": [
+  {
+   "id": "q61",
+   "t": "I felt immersed in the story and scenarios presented in the game."
+  },
+  {
+   "id": "q62",
+   "t": "The choices I made regarding simulated loss or priorities felt meaningful to me."
+  },
+  {
+   "id": "q63",
+   "t": "Helping/guiding the character in the game made me reflect on my own life priorities."
+  }
+ ]
+},
+ coping: {
+ "title": "Scale 1: Stress & Coping Process Scale (Adapted from Folkman & Lazarus, 1985, 1988)",
+ "inst": "Subscales: Positive Reappraisal & Meaning-Focused Coping. Thinking back to the simulated loss scenarios and choices you encountered during the game, how accurately does each statement describe how you processed or thought about the experience?",
+ "scaleNote": [
+  "1 = Does not apply at all",
+  "2 = Applies somewhat",
+  "3 = Applies moderately",
+  "4 = Applies very much"
+ ],
+ "scale": {
+  "min": 1,
+  "max": 4,
+  "labels": [
+   "Does not apply at all",
+   "",
+   "",
+   "Applies very much"
+  ]
+ },
+ "items": [
+  {
+   "id": "q64",
+   "t": "I tried to see the situation in a different light to make it seem more positive."
+  },
+  {
+   "id": "q65",
+   "t": "I looked for the good in what was happening in the scenario."
+  },
+  {
+   "id": "q66",
+   "t": "I changed or grew as a person in a good way through the reflection."
+  },
+  {
+   "id": "q67",
+   "t": "I came out of the experience with a clearer sense of what is important in life."
+  },
+  {
+   "id": "q68",
+   "t": "I rediscovered what is important in life through the choices I made."
+  },
+  {
+   "id": "q69",
+   "t": "I tried to focus on how I could learn from the simulated loss experience."
+  }
+ ]
+},
+ cses: {
+ "title": "Scale 2: Coping Self-Efficacy Scale (CSES - Post-Test) (Chesney et al., 2006)",
+ "inst": "Now that you have completed the activity, when things go wrong or when you face difficult problems in your life, how confident are you that you can perform the following actions? Rate your confidence from 0 (\"Cannot do at all\") to 10 (\"Certain can do\").",
+ "scale": {
+  "min": 0,
+  "max": 10,
+  "labels": [
+   "Cannot do at all",
+   "",
+   "",
+   "",
+   "",
+   "",
+   "",
+   "",
+   "",
+   "",
+   "Certain can do"
+  ]
+ },
+ "items": [
+  {
+   "id": "q18",
+   "t": "Think about one part of the problem at a time."
+  },
+  {
+   "id": "q22",
+   "t": "Make new friends."
+  },
+  {
+   "id": "q17",
+   "t": "Leave options open when things are stressful."
+  },
+  {
+   "id": "q14",
+   "t": "Keep yourself from feeling too upset by unpleasant thoughts."
+  },
+  {
+   "id": "q19",
+   "t": "Find solutions to your most difficult problems."
+  },
+  {
+   "id": "q20",
+   "t": "Get friends to help you with the things you need."
+  },
+  {
+   "id": "q13",
+   "t": "Take your mind off unpleasant thoughts."
+  },
+  {
+   "id": "q10",
+   "t": "Break an upsetting problem down into smaller parts."
+  },
+  {
+   "id": "q11",
+   "t": "Sort out what can be changed from what cannot be changed."
+  },
+  {
+   "id": "q12",
+   "t": "Get an unpleasant thought out of your head."
+  },
+  {
+   "id": "q16",
+   "t": "Keep yourself from feeling sad."
+  },
+  {
+   "id": "q15",
+   "t": "Make a plan of action and follow it when confronted with a problem."
+  },
+  {
+   "id": "q21",
+   "t": "Get emotional support from friends and family."
+  }
+ ]
+},
+ mean: {
+ "title": "Scale 3: Three-Dimensional Meaning Scale (3DM) – Meaning Subscale (Post-Test)",
+ "inst": "Please indicate the extent to which each statement applies to your thoughts about your life right now.",
+ "scaleNote": [
+  "1 = Strongly Disagree",
+  "2 = Disagree",
+  "3 = Slightly Disagree",
+  "4 = Neither Agree nor Disagree",
+  "5 = Slightly Agree",
+  "6 = Agree",
+  "7 = Strongly Agree"
+ ],
+ "scale": {
+  "min": 1,
+  "max": 7,
+  "labels": [
+   "Strongly Disagree",
+   "",
+   "",
+   "",
+   "",
+   "",
+   "Strongly Agree"
+  ]
+ },
+ "items": [
+  {
+   "id": "q8",
+   "t": "My personal existence is significant."
+  },
+  {
+   "id": "q7",
+   "t": "My life is full of value."
+  },
+  {
+   "id": "q40",
+   "t": "I think there was meaning even in the suffering I experienced."
+  },
+  {
+   "id": "q39",
+   "t": "I feel a single thread of meaning running through the various events of my life."
+  },
+  {
+   "id": "q9",
+   "t": "Every day I experience the sense that life is worth living."
+  },
+  {
+   "id": "q38",
+   "t": "I have come to accept the events that occurred in my life as inevitable."
+  }
+ ]
+},
+ swls: { ...POST.swls, title: "Scale 4: Satisfaction With Life Scale (SWLS)" },
+ emot: { ...POST.emot, title: "Scale 5: Emotional Experience of the Game", inst: "While playing this game, to what extent did you experience each of the following? Please select the number that best applies.", items: [...POST.emot.items.filter(i => i.id !== "q45" && i.id !== "q46"), ...([
+ {
+  "id": "q45",
+  "t": "I could put myself in the characters' position and understand what they were feeling."
+ },
+ {
+  "id": "q73",
+  "t": "I felt sorry for the characters and hoped that things would turn out well for them."
+ },
+ {
+  "id": "q46",
+  "t": "The story and messages of the game touched me deeply."
+ },
+ {
+  "id": "q74",
+  "t": "The characters' experiences of loss resonated with experiences in my own life."
+ }
+])] },
+ refl: { ...POST.refl, title: "Scale 6: Thinking About the Experience" },
+ reflect: {
+ "id": "q70",
+ "dn": "",
+ "type": "textarea",
+ "label": "Reflecting on the choices you made during the game's simulated loss experience, what insights did you gain regarding your personal values, inner resilience, or coping resources? How might these insights influence how you approach unexpected life events or stressful situations in the future?",
+ "ph": "Please write your response here."
+},
+ repeat: {
+ "id": "q71",
+ "dn": "",
+ "type": "radio",
+ "label": "Have you previously completed this study in a different course taught by Dr. Toyokawa during the 2026–2027 academic year?",
+ "opts": [
+  "No (Skip to Survey Completion)",
+  "Yes (Please answer the additional question below)"
+ ]
+},
+ longit: {
+ "id": "q72",
+ "dn": "",
+ "type": "textarea",
+ "label": "Reflecting on your previous participation earlier this academic year, has your interpretation or understanding of simulated loss and personal resilience changed since you last completed this activity? If so, please briefly describe how your perspective has evolved.",
+ "ph": "Please write your response here."
+},
+};
+
     // --- Components ---
     function Bar({ cur, tot }) {
       const pct = Math.round(cur / tot * 100);
@@ -894,7 +1157,7 @@
 
     function DQ({ q, value, onChange, ov, onOv, displayNum, dupCode }) {
       const fs = { width: "100%", padding: "10px 14px", border: `1.5px solid ${P.bdr}`, borderRadius: 8, fontSize: 15, fontFamily: "'Noto Sans JP',sans-serif", background: "rgba(255,255,255,0.08)", color: P.txt, outline: "none", boxSizing: "border-box", transition: "border-color 0.2s" };
-      const label = displayNum ? `${displayNum}.` : (q.dn || q.id.toUpperCase());
+      const label = displayNum ? `${displayNum}.` : (q.dn !== undefined ? q.dn : q.id.toUpperCase());
       if (q.type === "code") return <div style={{ marginBottom: 24 }}>
         <label style={{ display: "block", fontSize: 15, color: P.txt, marginBottom: 12, lineHeight: 1.7, fontWeight: 500 }}>{T(q.label)}</label>
         <CodeGen value={value} onChange={onChange} isPost={q.isPost} dupCode={dupCode} />
@@ -925,7 +1188,7 @@
       </div>;
       if (q.type === "checkbox") {
         const sel = value || []; return <div style={{ marginBottom: 24 }}>
-          <p style={{ fontSize: 15, color: P.txt, marginBottom: 10, lineHeight: 1.7 }}><span style={{ color: P.acc, fontWeight: 600, marginRight: 8, fontSize: 13 }}>{q.dn || q.id.toUpperCase()}</span>{T(q.label)}</p>
+          <p style={{ fontSize: 15, color: P.txt, marginBottom: 10, lineHeight: 1.7 }}><span style={{ color: P.acc, fontWeight: 600, marginRight: 8, fontSize: 13 }}>{q.dn !== undefined ? q.dn : q.id.toUpperCase()}</span>{T(q.label)}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {getOpts(q).map((o, i) => {
               const c = sel.includes(o); return <label key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 8, cursor: "pointer", transition: "all 0.15s", background: c ? P.selBg : "transparent", border: `1.5px solid ${c ? P.pri : "transparent"}`, fontSize: 14 }}>
@@ -1180,7 +1443,7 @@
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div><h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 17, color: "rgba(255,255,255,0.85)", margin: "0 0 6px", fontWeight: 500 }}>{T("ゲーム体験後のご質問")}</h3>
                   <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.6 }}>{T("人生満足度、コーピングに関する質問")}</p>
-                  <p style={{ fontSize: 12, color: P.acc, margin: "6px 0 0", fontWeight: 500 }}>{LANG === "en" ? "Estimated time: about 20 min (plus about 10 min for the written reflection)" : T("推定時間：3〜5分")}</p></div>
+                  <p style={{ fontSize: 12, color: P.acc, margin: "6px 0 0", fontWeight: 500 }}>{LANG === "en" ? "Estimated time: about 25–30 min in total (survey and written reflection)" : T("推定時間：3〜5分")}</p></div>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B8AF0" strokeWidth="2.5"><path d="M9 18l6-6-6-6" /></svg>
               </div>
             </button>
@@ -1261,7 +1524,7 @@
           </div>}
 
           <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderRadius: 10, padding: "20px 24px", marginBottom: 32 }}>
-            <h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 13, color: P.acc, margin: "0 0 16px", fontWeight: 600 }}>{LANG === "en" ? "PART I: DEMOGRAPHIC & BACKGROUND INFORMATION" : "Q1"}</h3>
+            <h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 13, color: P.acc, margin: "0 0 16px", fontWeight: 600 }}>{LANG === "en" ? (isPre ? "PART I: DEMOGRAPHIC & BACKGROUND INFORMATION" : "Study ID") : "Q1"}</h3>
             {(isPre ? PRE_X().demo : POST.code).map(q => {
               const fieldErr = errs === true && missing.includes(q.id);
               return <div key={q.id} id={`f-${q.id}`}>
@@ -1280,7 +1543,32 @@
           </> : <>
             <div id="f-q10"><SS section={PRE.swls} storageKey="survey_order_pre_swls" answers={ans} set={sa} /></div>
             <div id="f-q18"><SS section={PRE.cses} storageKey="survey_order_pre_cses" answers={ans} set={sa} /></div>
-          </>) : <>
+          </>) : (LANG === "en" ? <>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ background: "linear-gradient(90deg,#1E3A6E,#2B5EA7)", color: "#fff", padding: "16px 24px", borderRadius: "10px 10px 0 0", fontFamily: "'Noto Serif JP',serif" }}><h2 style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>PART I: GAME EXPERIENCE &amp; MANIPULATION CHECK</h2></div>
+              <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "8px 24px 16px" }}><div id="f-q60"><DQ q={POST_EN.completed} value={ans.q60} onChange={v => sa("q60", v)} ov={oth.q60} onOv={v => so("q60", v)} /></div></div>
+            </div>
+            <div id="f-q61"><SS key="pe-engage" section={POST_EN.engage} storageKey="survey_order_post_engage_en" answers={ans} set={sa} /></div>
+            <p style={{ fontFamily: "'Noto Serif JP',serif", fontSize: 15, color: P.acc, margin: "0 0 12px", fontWeight: 600, letterSpacing: 0.5 }}>PART II: PSYCHOMETRIC POST-TEST MEASURES</p>
+            <div id="f-q64"><SS key="pe-coping" section={POST_EN.coping} storageKey="survey_order_post_coping_en" answers={ans} set={sa} /></div>
+            <div id="f-q10"><SS key="pe-cses" section={POST_EN.cses} storageKey="survey_order_post_cses" answers={ans} set={sa} /></div>
+            <div id="f-q7"><SS key="pe-mean" section={POST_EN.mean} storageKey="survey_order_post_mean_en" answers={ans} set={sa} /></div>
+            <div id="f-q2"><SS key="pe-swls" section={POST_EN.swls} storageKey="survey_order_post_swls" answers={ans} set={sa} /></div>
+            <div id="f-q41"><SS key="pe-emot" section={POST_EN.emot} storageKey="survey_order_post_emot_en" answers={ans} set={sa} /></div>
+            <div id="f-q49"><SS key="pe-refl" section={POST_EN.refl} storageKey="survey_order_post_refl" answers={ans} set={sa} /></div>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ background: "linear-gradient(90deg,#1E3A6E,#2B5EA7)", color: "#fff", padding: "16px 24px", borderRadius: "10px 10px 0 0", fontFamily: "'Noto Serif JP',serif" }}><h2 style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>PART III: QUALITATIVE WRITTEN REFLECTION (~10 Minutes)</h2></div>
+              <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "8px 24px 16px" }}><p style={{ fontSize: 14, color: "#fff", lineHeight: 1.8, margin: "12px 0 8px" }}>Please take approximately 10 minutes to write a brief reflection responding to the prompt below. There are no right or wrong answers; we are interested in your personal thoughts and insights.</p><div id="f-q70"><DQ q={POST_EN.reflect} value={ans.q70} onChange={v => sa("q70", v)} ov={oth.q70} onOv={v => so("q70", v)} /></div></div>
+            </div>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ background: "linear-gradient(90deg,#1E3A6E,#2B5EA7)", color: "#fff", padding: "16px 24px", borderRadius: "10px 10px 0 0", fontFamily: "'Noto Serif JP',serif" }}><h2 style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>PART IV: REPEAT PARTICIPATION MODULE (For Longitudinal / Repeat Enrollees Only)</h2></div>
+              <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "8px 24px 16px" }}><div id="f-q71"><DQ q={POST_EN.repeat} value={ans.q71} onChange={v => sa("q71", v)} ov={oth.q71} onOv={v => so("q71", v)} /></div>{ans.q71 && ans.q71.indexOf("Yes") === 0 && <div id="f-q72"><DQ q={POST_EN.longit} value={ans.q72} onChange={v => sa("q72", v)} ov={oth.q72} onOv={v => so("q72", v)} /></div>}</div>
+            </div>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ background: "linear-gradient(90deg,#1E3A6E,#2B5EA7)", color: "#fff", padding: "16px 24px", borderRadius: "10px 10px 0 0", fontFamily: "'Noto Serif JP',serif" }}><h2 style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>Additional Questions</h2></div>
+              <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "8px 24px 16px" }}>{POST.gameSelect.map((q, idx) => <div key={q.id} id={`f-${q.id}`}><DQ q={q} value={ans[q.id]} onChange={v => sa(q.id, v)} ov={oth[q.id]} onOv={v => so(q.id, v)} displayNum={idx + 1} /></div>)}</div>
+            </div>
+          </> : <>
             <div id="f-q2"><SS section={POST.swls} storageKey="survey_order_post_swls" answers={ans} set={sa} /></div>
             <div id="f-q10"><SS section={POST.cses} storageKey="survey_order_post_cses" answers={ans} set={sa} /></div>
             <div id="f-q41"><SS section={POST.emot} storageKey="survey_order_post_emot" answers={ans} set={sa} /></div>
@@ -1291,7 +1579,7 @@
                 {POST.gameSelect.map((q, idx) => <div key={q.id} id={`f-${q.id}`}><DQ q={q} value={ans[q.id]} onChange={v => sa(q.id, v)} ov={oth[q.id]} onOv={v => so(q.id, v)} displayNum={idx + 1} /></div>)}
               </div>
             </div>
-          </>}
+          </>)}
 
           <div style={{ textAlign: "center", padding: "20px 0 40px" }}>
             <p style={{ fontSize: 13, color: P.mut, marginBottom: 16 }}>{T("すべての回答を入力したら、「完了」ボタンを押してください。")}</p>
