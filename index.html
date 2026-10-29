@@ -279,6 +279,419 @@
       },
     };
 
+    // --- Pretest content for the English version (follows Pretest_Survey.docx) ---
+    const PRE_EN = {
+ "demo": [
+  {
+   "id": "q1",
+   "type": "code",
+   "label": "Please create your study ID."
+  },
+  {
+   "id": "q2",
+   "dn": "Q2",
+   "type": "number",
+   "label": "What is your current age?",
+   "ph": "",
+   "suf": "years old"
+  },
+  {
+   "id": "q3",
+   "dn": "Q3",
+   "type": "radio",
+   "label": "What is your gender identity?",
+   "opts": [
+    "Male",
+    "Female",
+    "Non-binary / Genderqueer",
+    "Self-describe",
+    "Prefer not to say"
+   ],
+   "hasOther": true,
+   "otherIdx": 3
+  },
+  {
+   "id": "q4",
+   "dn": "Q4",
+   "type": "checkbox",
+   "label": "What is your race? (Select all that apply)",
+   "opts": [
+    "American Indian or Alaska Native",
+    "Asian",
+    "Black or African American",
+    "Middle Eastern or North African",
+    "Native Hawaiian or Other Pacific Islander",
+    "White",
+    "Some other race",
+    "Prefer not to answer"
+   ],
+   "hasOther": true,
+   "otherIdx": 6
+  },
+  {
+   "id": "q4b",
+   "dn": "Q5",
+   "type": "radio",
+   "label": "What is your ethnicity?",
+   "opts": [
+    "Hispanic or Latino",
+    "Not Hispanic or Latino",
+    "Unknown / Not sure",
+    "Prefer not to answer"
+   ]
+  },
+  {
+   "id": "q5",
+   "dn": "Q6",
+   "type": "checkbox",
+   "label": "What is your current employment status? (Select all that apply)",
+   "opts": [
+    "Full-time student",
+    "Part-time student",
+    "Employed full-time",
+    "Employed part-time",
+    "Self-employed / Business owner",
+    "Unemployed",
+    "Homemaker",
+    "On leave / Retired",
+    "Other",
+    "Prefer not to say"
+   ],
+   "hasOther": true,
+   "otherIdx": 8
+  },
+  {
+   "id": "q6",
+   "dn": "Q7",
+   "type": "radio",
+   "label": "What is your current marital / relationship status?",
+   "opts": [
+    "Single / Not currently in a relationship",
+    "In a relationship (not cohabiting)",
+    "Living with a partner / Cohabiting",
+    "Married",
+    "Divorced / Separated",
+    "Widowed",
+    "Prefer not to say"
+   ]
+  },
+  {
+   "id": "q7",
+   "dn": "Q8",
+   "type": "radio",
+   "label": "Do you have children?",
+   "opts": [
+    "Yes",
+    "No",
+    "Prefer not to say"
+   ]
+  },
+  {
+   "id": "q8",
+   "dn": "Q9",
+   "type": "radio",
+   "label": "How would you rate your overall subjective health status?",
+   "opts": [
+    "Excellent",
+    "Good",
+    "Fair",
+    "Poor",
+    "Prefer not to say"
+   ]
+  },
+  {
+   "id": "q9",
+   "dn": "Q10",
+   "type": "radio",
+   "label": "Within the past 3 years, have you experienced a major life loss (e.g., bereavement, separation from an important person, loss of health, loss of an important role or job)?",
+   "opts": [
+    "Yes",
+    "No",
+    "Unsure",
+    "Prefer not to say"
+   ]
+  }
+ ],
+ "swls": {
+  "title": "Scale 1: Satisfaction With Life Scale (SWLS) (Diener, Emmons, Larsen, & Griffin, 1985)",
+  "inst": "Below are five statements that you may agree or disagree with. Using the 1–7 scale below, indicate your agreement with each item. Please be open and honest in your responding.",
+  "scaleNote": [
+   "1 = Strongly Disagree",
+   "2 = Disagree",
+   "3 = Slightly Disagree",
+   "4 = Neither Agree nor Disagree",
+   "5 = Slightly Agree",
+   "6 = Agree",
+   "7 = Strongly Agree"
+  ],
+  "scale": {
+   "min": 1,
+   "max": 7,
+   "labels": [
+    "Strongly Disagree",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "Strongly Agree"
+   ]
+  },
+  "items": [
+   {
+    "id": "q10",
+    "t": "I am satisfied with my life."
+   },
+   {
+    "id": "q11",
+    "t": "The conditions of my life are excellent."
+   },
+   {
+    "id": "q12",
+    "t": "In most ways my life is close to my ideal."
+   },
+   {
+    "id": "q13",
+    "t": "So far I have gotten the important things I want in life."
+   },
+   {
+    "id": "q14",
+    "t": "If I could live my life over, I would change almost nothing."
+   }
+  ]
+ },
+ "cses": {
+  "title": "Scale 2: Coping Self-Efficacy Scale (CSES) (Chesney et al., 2006)",
+  "inst": "When things go wrong or when you are facing difficult problems, how confident are you that you can perform the following actions? Please rate your confidence on a scale from 0 (\"Cannot do at all\") to 10 (\"Certain can do\").",
+  "scale": {
+   "min": 0,
+   "max": 10,
+   "labels": [
+    "Cannot do at all",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "Certain can do"
+   ]
+  },
+  "items": [
+   {
+    "id": "q26",
+    "t": "Think about one part of the problem at a time."
+   },
+   {
+    "id": "q30",
+    "t": "Make new friends."
+   },
+   {
+    "id": "q25",
+    "t": "Leave options open when things are stressful."
+   },
+   {
+    "id": "q22",
+    "t": "Keep yourself from feeling too upset by unpleasant thoughts."
+   },
+   {
+    "id": "q27",
+    "t": "Find solutions to your most difficult problems."
+   },
+   {
+    "id": "q28",
+    "t": "Get friends to help you with the things you need."
+   },
+   {
+    "id": "q21",
+    "t": "Take your mind off unpleasant thoughts."
+   },
+   {
+    "id": "q18",
+    "t": "Break an upsetting problem down into smaller parts."
+   },
+   {
+    "id": "q19",
+    "t": "Sort out what can be changed from what cannot be changed."
+   },
+   {
+    "id": "q20",
+    "t": "Get an unpleasant thought out of your head."
+   },
+   {
+    "id": "q24",
+    "t": "Keep yourself from feeling sad."
+   },
+   {
+    "id": "q23",
+    "t": "Make a plan of action and follow it when confronted with a problem."
+   },
+   {
+    "id": "q29",
+    "t": "Get emotional support from friends and family."
+   }
+  ]
+ },
+ "meaning": {
+  "title": "Scale 3: Three-Dimensional Meaning Scale (3DM) – Meaning Subscale",
+  "inst": "The following statements express your thoughts about your life as a whole. Please indicate the extent to which each statement applies to you.",
+  "scaleNote": [
+   "1 = Strongly Disagree",
+   "2 = Disagree",
+   "3 = Slightly Disagree",
+   "4 = Neither Agree nor Disagree",
+   "5 = Slightly Agree",
+   "6 = Agree",
+   "7 = Strongly Agree"
+  ],
+  "scale": {
+   "min": 1,
+   "max": 7,
+   "labels": [
+    "Strongly Disagree",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "Strongly Agree"
+   ]
+  },
+  "items": [
+   {
+    "id": "q31",
+    "t": "My personal existence is significant."
+   },
+   {
+    "id": "q32",
+    "t": "My life is full of value."
+   },
+   {
+    "id": "q33",
+    "t": "I think there was meaning even in the suffering I experienced."
+   },
+   {
+    "id": "q34",
+    "t": "I feel a single thread of meaning running through the various events of my life."
+   },
+   {
+    "id": "q35",
+    "t": "Every day I experience the sense that life is worth living."
+   },
+   {
+    "id": "q36",
+    "t": "I have come to accept the events that occurred in my life as inevitable."
+   }
+  ]
+ },
+ "play": {
+  "title": "Scale 4: Playful Disposition Scale",
+  "inst": "People differ in how they tend to approach everyday situations. The following statements ask about your general tendencies and preferences. Please indicate how well each statement describes you based on your first impression.",
+  "scaleNote": [
+   "1 = Strongly Disagree",
+   "2 = Disagree",
+   "3 = Slightly Disagree",
+   "4 = Slightly Agree",
+   "5 = Agree",
+   "6 = Strongly Agree"
+  ],
+  "scale": {
+   "min": 1,
+   "max": 6,
+   "labels": [
+    "Strongly Disagree",
+    "",
+    "",
+    "",
+    "",
+    "Strongly Agree"
+   ]
+  },
+  "items": [
+   {
+    "id": "q37",
+    "t": "I can enjoy the fun things that others start."
+   },
+   {
+    "id": "q38",
+    "t": "I understand social rules, but in most cases, I am not bound too tightly by them."
+   },
+   {
+    "id": "q39",
+    "t": "I don't think I lose anything by doing something silly."
+   },
+   {
+    "id": "q40",
+    "t": "No matter what I am doing, I try to have fun."
+   },
+   {
+    "id": "q41",
+    "t": "I often act depending on my mood at the time."
+   },
+   {
+    "id": "q42",
+    "t": "I gladly accept the fun things others start."
+   },
+   {
+    "id": "q43",
+    "t": "I often do unplanned things."
+   },
+   {
+    "id": "q44",
+    "t": "If I want to do something, I rarely stop because of what others might think."
+   },
+   {
+    "id": "q45",
+    "t": "I often follow whatever thought pops into my head."
+   },
+   {
+    "id": "q46",
+    "t": "Whatever the activity, I can make it fun in my own way."
+   },
+   {
+    "id": "q47",
+    "t": "If someone starts something fun, I am glad to join in."
+   },
+   {
+    "id": "q48",
+    "t": "I sometimes act without worrying about the consequences."
+   },
+   {
+    "id": "q49",
+    "t": "I can find enjoyment in most situations."
+   },
+   {
+    "id": "q50",
+    "t": "I don't always follow the rules."
+   },
+   {
+    "id": "q51",
+    "t": "I am usually the one who starts something fun on the spot."
+   },
+   {
+    "id": "q52",
+    "t": "I think it is important to have a fun time."
+   },
+   {
+    "id": "q53",
+    "t": "Having fun is very important in my life."
+   },
+   {
+    "id": "q54",
+    "t": "I often act on the spur of the moment."
+   },
+   {
+    "id": "q55",
+    "t": "I often act impulsively."
+   }
+  ]
+ }
+};
+    const PRE_X = () => (LANG === "en" ? PRE_EN : PRE);
+
     const POST = {
       code: [{ id: "q1", type: "code", label: "匿名コードを確認してください。", isPost: true }],
       swls: {
@@ -481,7 +894,7 @@
 
     function DQ({ q, value, onChange, ov, onOv, displayNum, dupCode }) {
       const fs = { width: "100%", padding: "10px 14px", border: `1.5px solid ${P.bdr}`, borderRadius: 8, fontSize: 15, fontFamily: "'Noto Sans JP',sans-serif", background: "rgba(255,255,255,0.08)", color: P.txt, outline: "none", boxSizing: "border-box", transition: "border-color 0.2s" };
-      const label = displayNum ? `${displayNum}.` : q.id.toUpperCase();
+      const label = displayNum ? `${displayNum}.` : (q.dn || q.id.toUpperCase());
       if (q.type === "code") return <div style={{ marginBottom: 24 }}>
         <label style={{ display: "block", fontSize: 15, color: P.txt, marginBottom: 12, lineHeight: 1.7, fontWeight: 500 }}>{T(q.label)}</label>
         <CodeGen value={value} onChange={onChange} isPost={q.isPost} dupCode={dupCode} />
@@ -512,7 +925,7 @@
       </div>;
       if (q.type === "checkbox") {
         const sel = value || []; return <div style={{ marginBottom: 24 }}>
-          <p style={{ fontSize: 15, color: P.txt, marginBottom: 10, lineHeight: 1.7 }}><span style={{ color: P.acc, fontWeight: 600, marginRight: 8, fontSize: 13 }}>{q.id.toUpperCase()}</span>{T(q.label)}</p>
+          <p style={{ fontSize: 15, color: P.txt, marginBottom: 10, lineHeight: 1.7 }}><span style={{ color: P.acc, fontWeight: 600, marginRight: 8, fontSize: 13 }}>{q.dn || q.id.toUpperCase()}</span>{T(q.label)}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {getOpts(q).map((o, i) => {
               const c = sel.includes(o); return <label key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 8, cursor: "pointer", transition: "all 0.15s", background: c ? P.selBg : "transparent", border: `1.5px solid ${c ? P.pri : "transparent"}`, fontSize: 14 }}>
@@ -692,7 +1105,7 @@
 
       const cnt = () => Object.keys(ans).filter(k => { const v = ans[k]; if (Array.isArray(v)) return v.length > 0; return v !== undefined && v !== null && v !== "" }).length;
       const tot = () => {
-        if (view === "pre") return PRE.demo.length + PRE.swls.items.length + PRE.cses.items.length;
+        if (view === "pre") return PRE_X().demo.length + PRE_X().swls.items.length + PRE_X().cses.items.length;
         if (view === "post") return POST.code.length + POST.swls.items.length + POST.cses.items.length + POST.emot.items.length + POST.refl.items.length + POST.gameSelect.length;
         return 1;
       };
@@ -848,8 +1261,8 @@
           </div>}
 
           <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderRadius: 10, padding: "20px 24px", marginBottom: 32 }}>
-            <h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 13, color: P.acc, margin: "0 0 16px", fontWeight: 600 }}>{"Q1"}</h3>
-            {(isPre ? PRE.demo : POST.code).map(q => {
+            <h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 13, color: P.acc, margin: "0 0 16px", fontWeight: 600 }}>{LANG === "en" ? "PART I: DEMOGRAPHIC & BACKGROUND INFORMATION" : "Q1"}</h3>
+            {(isPre ? PRE_X().demo : POST.code).map(q => {
               const fieldErr = errs === true && missing.includes(q.id);
               return <div key={q.id} id={`f-${q.id}`}>
                 <DQ q={q} value={ans[q.id]} onChange={v => sa(q.id, v)} ov={oth[q.id]} onOv={v => so(q.id, v)} dupCode={dupCode} />
@@ -858,10 +1271,16 @@
             })}
           </div>
 
-          {isPre ? <>
+          {isPre ? (LANG === "en" ? <>
+            <div id="f-q10"><p style={{ fontFamily: "'Noto Serif JP',serif", fontSize: 15, color: P.acc, margin: "0 0 12px", fontWeight: 600, letterSpacing: 0.5 }}>PART II: PSYCHOMETRIC MEASURES</p></div>
+            <SS key="en-swls" section={PRE_EN.swls} storageKey="survey_order_pre_swls" answers={ans} set={sa} />
+            <div id="f-q18"><SS key="en-cses" section={PRE_EN.cses} storageKey="survey_order_pre_cses" answers={ans} set={sa} /></div>
+            <SS key="en-3dm" section={PRE_EN.meaning} storageKey="survey_order_pre_3dm_en" answers={ans} set={sa} />
+            <SS key="en-play" section={PRE_EN.play} storageKey="survey_order_pre_play_en" answers={ans} set={sa} />
+          </> : <>
             <div id="f-q10"><SS section={PRE.swls} storageKey="survey_order_pre_swls" answers={ans} set={sa} /></div>
             <div id="f-q18"><SS section={PRE.cses} storageKey="survey_order_pre_cses" answers={ans} set={sa} /></div>
-          </> : <>
+          </>) : <>
             <div id="f-q2"><SS section={POST.swls} storageKey="survey_order_post_swls" answers={ans} set={sa} /></div>
             <div id="f-q10"><SS section={POST.cses} storageKey="survey_order_post_cses" answers={ans} set={sa} /></div>
             <div id="f-q41"><SS section={POST.emot} storageKey="survey_order_post_emot" answers={ans} set={sa} /></div>
