@@ -195,7 +195,7 @@
       "ゲーム体験についてのご質問": "Awareness of Inner Resilience and Motivation for Growth Through Simulated Loss Experiences",
       "ゲーム体験についてのご質問に": "Please take part in our questions",
       "ご協力ください。": "on the game experience.",
-      "この質問は，ゲームを用いて人生を省察する体験の影響について確認することを目的としています。": "This study examines students' experiences of a game-based activity involving simulated stressful or loss experiences and their reflections following the activity.",
+      "この質問は，ゲームを用いて人生を省察する体験の影響について確認することを目的としています。": "Please complete the three steps below in order: the pre-activity survey, the game activity, and the post-activity survey.",
       "ここで得られたデータは統計的に処理され，個人情報が公開されることはありません。": "The research dataset will not include your name or other direct identifiers. Your responses will be analyzed as aggregated research data.",
       "また，回答は任意であり，回答の有無があなたの評価に影響することはありません。": "Participation is voluntary. You may stop participating at any time without penalty.",
       "回答結果が評価に影響することもありません。": "Choosing not to participate or withdrawing before completing the activity will not affect your academic performance or your relationship with the course instructor, who is also the Principal Investigator.",
@@ -206,8 +206,8 @@
       "ゲーム体験": "Game Activity",
       "ゲームを体験してください": "Please play the game",
       "推定時間：20〜30分　|　全3ステージ": "Estimated time: about 20 min  |  3 stages",
-      "この回答をもちまして，本研究の協力に同意いただいたものとさせていただきます。": "You have agreed to participate in this study. Participation is voluntary.",
-      "すべての回答は匿名です。": "Your responses are collected under a study ID, without your name or other direct identifiers.",
+      "この回答をもちまして，本研究の協力に同意いただいたものとさせていただきます。": "You have agreed to participate in this study. You may stop at any time without penalty.",
+      "すべての回答は匿名です。": "",
       "調査責任者：東京大学情報学環　藤本　徹": "Principal Investigator: Toru Fujimoto, Interfaculty Initiative in Information Studies, The University of Tokyo",
       "調査実施者：東京大学情報学環　坂井裕紀": "Survey Administrator: Hironori Sakai, Interfaculty Initiative in Information Studies, The University of Tokyo",
       "調査実施者：南オレゴン大学　豊川典子": "Survey Administrator: Noriko Toyokawa, Southern Oregon University",
@@ -1412,10 +1412,10 @@
             <h1 style={{ fontFamily: "'Noto Serif JP',serif", fontSize: 24, color: "#FFFFFF", marginBottom: 16, fontWeight: 700, lineHeight: 1.5 }}>{LANG === "en" ? STUDY_TITLE_EN : <>{T("ゲーム体験についてのご質問に")}<br />{T("ご協力ください。")}</>}</h1>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.85)", lineHeight: 1.9, textAlign: "left", margin: "0 auto", maxWidth: 500 }}>{T("この質問は，ゲームを用いて人生を省察する体験の影響について確認することを目的としています。")}</p>
           </div>
-          <div style={{ marginBottom: 28, paddingLeft: 4 }}>
+          {LANG !== "en" && <div style={{ marginBottom: 28, paddingLeft: 4 }}>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 2.0, margin: "0 0 16px" }}>{T("ここで得られたデータは統計的に処理され，個人情報が公開されることはありません。")}<br />{T("また，回答は任意であり，回答の有無があなたの評価に影響することはありません。")}<br />{T("回答結果が評価に影響することもありません。")}</p>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 2.0, margin: 0 }}>{T("できるだけ多くの方のご協力を必要としております。")}<br />{T("ご協力の程よろしくお願い申し上げます。")}</p>
-          </div>
+          </div>}
           <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 28 }}>
             <button onClick={() => { setView("pre"); setAns({}); setOth({}); setDone(false); setErrs(false); setGs(null); window.scrollTo(0, 0) }}
               style={{ background: "linear-gradient(135deg,rgba(91,138,240,0.15),rgba(43,94,167,0.2))", border: "1.5px solid rgba(91,138,240,0.35)", borderRadius: 12, padding: "24px 28px", textAlign: "left", cursor: "pointer", transition: "all 0.2s", boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}
@@ -1423,8 +1423,8 @@
               onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(91,138,240,0.35)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)"; e.currentTarget.style.background = "linear-gradient(135deg,rgba(91,138,240,0.15),rgba(43,94,167,0.2))" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div><h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 17, color: "rgba(255,255,255,0.85)", margin: "0 0 6px", fontWeight: 500 }}>{T("ゲーム体験前のご質問")}</h3>
-                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.6 }}>{T("人生満足度、コーピングに関する質問")}</p>
-                  <p style={{ fontSize: 12, color: P.acc, margin: "6px 0 0", fontWeight: 500 }}>{T("推定時間：3〜5分")}</p></div>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.6 }}>{(LANG === "en" ? "Background, life satisfaction, coping, meaning, and playfulness" : T("人生満足度、コーピングに関する質問"))}</p>
+                  <p style={{ fontSize: 12, color: P.acc, margin: "6px 0 0", fontWeight: 500 }}>{LANG === "en" ? "Estimated time: about 10 min" : T("推定時間：3〜5分")}</p></div>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B8AF0" strokeWidth="2.5"><path d="M9 18l6-6-6-6" /></svg>
               </div>
             </button>
@@ -1446,7 +1446,7 @@
               onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(91,138,240,0.35)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)"; e.currentTarget.style.background = "linear-gradient(135deg,rgba(91,138,240,0.15),rgba(43,94,167,0.2))" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div><h3 style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 17, color: "rgba(255,255,255,0.85)", margin: "0 0 6px", fontWeight: 500 }}>{T("ゲーム体験後のご質問")}</h3>
-                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.6 }}>{T("人生満足度、コーピングに関する質問")}</p>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.6 }}>{(LANG === "en" ? "Your game experience, coping, meaning, and emotions, plus a short written reflection" : T("人生満足度、コーピングに関する質問"))}</p>
                   <p style={{ fontSize: 12, color: P.acc, margin: "6px 0 0", fontWeight: 500 }}>{LANG === "en" ? "Estimated time: about 25–30 min in total (survey and written reflection)" : T("推定時間：3〜5分")}</p></div>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B8AF0" strokeWidth="2.5"><path d="M9 18l6-6-6-6" /></svg>
               </div>
@@ -1456,11 +1456,7 @@
             <p style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 20 }}>{T("この回答をもちまして，本研究の協力に同意いただいたものとさせていただきます。")}<br />{T("すべての回答は匿名です。")}</p>
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.9, textAlign: "center" }}>
 {LANG === "en" ? <>
-              <p style={{ margin: "0 0 4px", fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>Principal Investigator: Noriko Toyokawa, Ph.D., Associate Professor, Psychology, Southern Oregon University</p>
-              <p style={{ margin: "0 0 2px", fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>Co-Investigators:</p>
-              <p style={{ margin: "0 0 2px", fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>Hironori Sakai, Project Researcher, Ludic Lab in Information Studies, The University of Tokyo</p>
-              <p style={{ margin: "0 0 16px", fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>Toru Fujimoto, Professor, Interfaculty Initiative in Information Studies, The University of Tokyo</p>
-              <p style={{ margin: 0 }}>If you have any questions or concerns, please contact the address below.<br />Principal Investigator (Noriko Toyokawa): <a href="mailto:toyokawan@sou.edu" style={{ color: "#7BA4F7" }}>toyokawan@sou.edu</a> · 541-522-6858<br />Hironori Sakai: <a href="mailto:hironori.sakai@iii.u-tokyo.ac.jp" style={{ color: "#7BA4F7" }}>hironori.sakai@iii.u-tokyo.ac.jp</a><br />Institutional Review Board, Southern Oregon University (Clayton Austin, Ph.D., Director, Center for the Advancement of Teaching and Learning, 1250 Siskiyou Blvd., Ashland, OR 97520) · Tel: 541-552-8290</p>
+              <p style={{ margin: 0 }}>Questions about this study: Principal Investigator Noriko Toyokawa, Ph.D., Southern Oregon University<br /><a href="mailto:toyokawan@sou.edu" style={{ color: "#7BA4F7" }}>toyokawan@sou.edu</a> · 541-522-6858<br />Questions about your rights as a participant: Southern Oregon University Institutional Review Board · 541-552-8290</p>
             </> : <>
               <p style={{ margin: "0 0 4px", fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>{T("調査責任者：東京大学情報学環　藤本　徹")}</p>
               <p style={{ margin: "0 0 4px", fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>{T("調査実施者：東京大学情報学環　坂井裕紀")}</p>
