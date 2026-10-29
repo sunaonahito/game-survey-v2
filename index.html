@@ -415,7 +415,7 @@
   }
  ],
  "swls": {
-  "title": "Scale 1: Satisfaction With Life Scale (SWLS) (Diener, Emmons, Larsen, & Griffin, 1985)",
+  "title": "Section 1",
   "inst": "Below are five statements that you may agree or disagree with. Using the 1–7 scale below, indicate your agreement with each item. Please be open and honest in your responding.",
   "scaleNote": [
    "1 = Strongly Disagree",
@@ -463,7 +463,7 @@
   ]
  },
  "cses": {
-  "title": "Scale 2: Coping Self-Efficacy Scale (CSES) (Chesney et al., 2006)",
+  "title": "Section 2",
   "inst": "When things go wrong or when you are facing difficult problems, how confident are you that you can perform the following actions? Please rate your confidence on a scale from 0 (\"Cannot do at all\") to 10 (\"Certain can do\").",
   "scale": {
    "min": 0,
@@ -538,7 +538,7 @@
   ]
  },
  "meaning": {
-  "title": "Scale 3: Three-Dimensional Meaning Scale (3DM) – Meaning Subscale",
+  "title": "Section 3",
   "inst": "The following statements express your thoughts about your life as a whole. Please indicate the extent to which each statement applies to you.",
   "scaleNote": [
    "1 = Strongly Disagree",
@@ -590,7 +590,7 @@
   ]
  },
  "play": {
-  "title": "Scale 4: Playful Disposition Scale",
+  "title": "Section 4",
   "inst": "People differ in how they tend to approach everyday situations. The following statements ask about your general tendencies and preferences. Please indicate how well each statement describes you based on your first impression.",
   "scaleNote": [
    "1 = Strongly Disagree",
@@ -813,7 +813,7 @@
  ]
 },
  engage: {
- "title": "Q2. Game Engagement & Immersion Check",
+ "title": "Q2.",
  "inst": "Please rate your experience during the game on a scale from 1 (Strongly Disagree) to 7 (Strongly Agree).",
  "scale": {
   "min": 1,
@@ -844,8 +844,8 @@
  ]
 },
  coping: {
- "title": "Scale 1: Stress & Coping Process Scale (Adapted from Folkman & Lazarus, 1985, 1988)",
- "inst": "Subscales: Positive Reappraisal & Meaning-Focused Coping. Thinking back to the simulated loss scenarios and choices you encountered during the game, how accurately does each statement describe how you processed or thought about the experience?",
+ "title": "Section 1",
+ "inst": "Thinking back to the simulated loss scenarios and choices you encountered during the game, how accurately does each statement describe how you processed or thought about the experience?",
  "scaleNote": [
   "1 = Does not apply at all",
   "2 = Applies somewhat",
@@ -890,7 +890,7 @@
  ]
 },
  cses: {
- "title": "Scale 2: Coping Self-Efficacy Scale (CSES - Post-Test) (Chesney et al., 2006)",
+ "title": "Section 2",
  "inst": "Now that you have completed the activity, when things go wrong or when you face difficult problems in your life, how confident are you that you can perform the following actions? Rate your confidence from 0 (\"Cannot do at all\") to 10 (\"Certain can do\").",
  "scale": {
   "min": 0,
@@ -965,7 +965,7 @@
  ]
 },
  mean: {
- "title": "Scale 3: Three-Dimensional Meaning Scale (3DM) – Meaning Subscale (Post-Test)",
+ "title": "Section 3",
  "inst": "Please indicate the extent to which each statement applies to your thoughts about your life right now.",
  "scaleNote": [
   "1 = Strongly Disagree",
@@ -1016,8 +1016,8 @@
   }
  ]
 },
- swls: { ...POST.swls, title: "Scale 4: Satisfaction With Life Scale (SWLS)" },
- emot: { ...POST.emot, title: "Scale 5: Emotional Experience of the Game", inst: "While playing this game, to what extent did you experience each of the following? Please select the number that best applies.", items: [...POST.emot.items.filter(i => !["q45", "q46", "q73", "q74"].includes(i.id)), ...([
+ swls: { ...POST.swls, title: "Section 4" },
+ emot: { ...POST.emot, title: "Section 5", inst: "While playing this game, to what extent did you experience each of the following? Please select the number that best applies.", items: [...POST.emot.items.filter(i => !["q45", "q46", "q73", "q74"].includes(i.id)), ...([
  {
   "id": "q45",
   "t": "I could put myself in the characters' position and understand what they were feeling."
@@ -1035,7 +1035,7 @@
   "t": "The characters' experiences of loss resonated with experiences in my own life."
  }
 ])] },
- refl: { ...POST.refl, title: "Scale 6: Thinking About the Experience" },
+ refl: { ...POST.refl, title: "Section 6" },
  reflect: {
  "id": "q70",
  "dn": "",
