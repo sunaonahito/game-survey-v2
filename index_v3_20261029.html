@@ -823,8 +823,7 @@
             </div>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>{T("ゲームデータは収集していません。お時間の許す際にプレイいただけると幸いです。")}</p>
           </div>}
-          <div>{view === "post" ? <a href="https://sunaonahito.github.io/Informed-consent/" style={{ display: "inline-block", padding: "12px 32px", background: "transparent", color: P.pri, border: `2px solid ${P.pri}`, borderRadius: 8, fontSize: 14, cursor: "pointer", fontWeight: 600, transition: "all 0.2s", textDecoration: "none" }}
-            onMouseEnter={e => { e.target.style.background = P.pri; e.target.style.color = "#fff" }} onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = P.pri }}>{T("トップに戻る")}</a> : <button onClick={reset} style={{ padding: "12px 32px", background: "transparent", color: P.pri, border: `2px solid ${P.pri}`, borderRadius: 8, fontSize: 14, cursor: "pointer", fontWeight: 600, transition: "all 0.2s" }}
+          <div>{<button onClick={reset} style={{ padding: "12px 32px", background: "transparent", color: P.pri, border: `2px solid ${P.pri}`, borderRadius: 8, fontSize: 14, cursor: "pointer", fontWeight: 600, transition: "all 0.2s" }}
             onMouseEnter={e => { e.target.style.background = P.pri; e.target.style.color = "#fff" }} onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = P.pri }}>{T("トップに戻る")}</button>}</div>
         </div>
       </div>;
