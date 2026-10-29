@@ -1223,6 +1223,17 @@
 
     function ConsentScreen({ lang, onChange, onAgree, onDecline }) {
       const [choice, setChoice] = useState("");
+      const qref = React.useRef(null);
+      const [seen, setSeen] = useState(false);
+      useEffect(() => {
+        const el = qref.current;
+        if (!el) return;
+        if (typeof IntersectionObserver === "undefined") { setSeen(true); return; }
+        const io = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) setSeen(true); }); }, { threshold: 0.1 });
+        io.observe(el);
+        return () => io.disconnect();
+      }, []);
+      const goConsent = () => { try { if (qref.current) qref.current.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) { } };
       const h2 = { fontFamily: "'Noto Serif JP',serif", fontSize: 18, color: "#fff", margin: "30px 0 10px", fontWeight: 600 };
       const para = { fontSize: 14, color: "rgba(255,255,255,0.85)", lineHeight: 1.8, margin: "0 0 12px" };
       const ul = { margin: "0 0 12px", paddingLeft: 22, fontSize: 14, color: "rgba(255,255,255,0.85)" };
@@ -1235,11 +1246,15 @@
           <input type="radio" name="consent" checked={on} onChange={() => setChoice(v)} style={{ display: "none" }} />
         </label>;
       };
-      return <div style={{ minHeight: "100vh", padding: "24px 20px 60px" }}>
+      return <div style={{ minHeight: "100vh", padding: "24px 20px 90px" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}><LangSwitch lang={lang} onChange={onChange} /></div>
           <div style={{ background: P.card, border: `1px solid ${P.bdr}`, borderRadius: 12, padding: "28px 28px 32px" }}>
-            <h1 style={{ fontFamily: "'Noto Serif JP',serif", fontSize: 24, color: "#fff", margin: "0 0 20px", fontWeight: 700 }}>Informed Consent</h1>
+            <h1 style={{ fontFamily: "'Noto Serif JP',serif", fontSize: 24, color: "#fff", margin: "0 0 16px", fontWeight: 700 }}>Informed Consent</h1>
+            <div style={{ background: "rgba(232,164,74,0.12)", border: `1px solid ${P.acc}`, borderRadius: 10, padding: "14px 16px", margin: "0 0 24px" }}>
+              <p style={{ fontSize: 14, color: "#fff", lineHeight: 1.7, margin: "0 0 8px" }}>Please read this form to the end. At the bottom of this page, you will be asked whether you agree to participate (Yes / No).</p>
+              <button type="button" onClick={goConsent} style={{ background: "transparent", border: "none", padding: 0, color: P.priL, fontSize: 14, fontWeight: 600, cursor: "pointer", textDecoration: "underline" }}>Go to the consent question &darr;</button>
+            </div>
             <p style={para}><strong>Study Title:</strong> {STUDY_TITLE_EN}</p>
             <p style={para}><strong>Principal Investigator (PI):</strong> Noriko Toyokawa, Ph.D., Associate Professor, Psychology, Southern Oregon University</p>
             <p style={{ ...para, marginBottom: 4 }}><strong>Co-Investigators:</strong></p>
@@ -1323,7 +1338,7 @@
               Tel: 541-552-8290
             </p>
 
-            <h2 style={h2}>Consent to Participate</h2>
+            <h2 ref={qref} id="consent-question" style={h2}>Consent to Participate</h2>
             <p style={para}>I have read and understood the information provided in this Informed Consent Form. I voluntarily agree to participate in this study.</p>
             <div style={{ marginTop: 14 }}>
               {opt("yes", "1. Yes, I agree to participate in the study.")}
@@ -1334,6 +1349,10 @@
             </div>
           </div>
         </div>
+        {!seen && <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 50, background: "rgba(15,31,61,0.96)", borderTop: `1px solid ${P.bdr}`, padding: "10px 16px", textAlign: "center" }}>
+          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", marginRight: 12 }}>To answer Yes / No, scroll to the bottom.</span>
+          <button type="button" onClick={goConsent} style={{ padding: "6px 16px", background: P.pri, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Go to the consent question &darr;</button>
+        </div>}
       </div>;
     }
 
